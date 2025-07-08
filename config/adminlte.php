@@ -11,7 +11,7 @@ return [
     'google_fonts' => [ 'allowed' => true ],
 
     'logo' => '<b>Equip</b>Control',
-    'logo_img' => 'vendor/adminlte/dist/img/equipcontrol_logo.png',
+    'logo_img' => 'vendor/adminlte/dist/img/logo.png',
     'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -20,7 +20,7 @@ return [
     'auth_logo' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/equipcontrol_logo.png',
+            'path' => 'vendor/adminlte/dist/img/logo.png',
             'alt' => 'Auth Logo',
             'class' => 'rounded mx-auto d-block',
             'width' => 60,
