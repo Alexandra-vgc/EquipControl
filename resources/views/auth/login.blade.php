@@ -1,4 +1,4 @@
-@extends('adminlte::auth.login')
+@extends('adminlte::auth.login') 
 
 @section('auth_body')
 <form action="{{ url('/login') }}" method="POST">

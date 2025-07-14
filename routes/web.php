@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\UsuarioController;
+
 
 Route::get('/', function () {
     return redirect('/login');
@@ -67,3 +69,8 @@ Route::get('/logout', function () {
     session()->forget('usuario');
     return redirect('/login');
 });
+
+Route::get('usuario/perfil', [App\Http\Controllers\UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
+Route::post('usuario/perfil', function (Request $request) {
+    return redirect()->back()->with('success', 'Datos guardados');
+})->name('usuario.perfil.guardar');
