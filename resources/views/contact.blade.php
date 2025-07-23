@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Contactanos')
+@section('title', 'Contacto')
 
 @section('content_header')
     <h1 class="text-bold text-dark">Formulario de Contacto</h1>
