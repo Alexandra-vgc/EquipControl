@@ -2,9 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ContactController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
+// Redirige la raíz a login
 Route::get('/', function () {
     return redirect('/login');
 });
@@ -19,42 +28,47 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-// POST login con usuarios quemados
+// POST login con usuarios reales en base de datos
 Route::post('/login', function (Request $request) {
     $credentials = $request->only('email', 'password');
 
-    $usuariosQuemados = [
-        ['email' => 'admin@intesud.edu.ec', 'password' => 'admin123', 'rol' => 'admin'],
-        ['email' => 'usuario@intesud.edu.ec', 'password' => 'user123', 'rol' => 'usuario'],
-    ];
+    $user = User::where('email', $credentials['email'])->first();
 
-    foreach ($usuariosQuemados as $usuario) {
-        if (
-            $credentials['email'] === $usuario['email'] &&
-            $credentials['password'] === $usuario['password']
-        ) {
-            session(['usuario' => $usuario]);
-            return redirect('/dashboard');
-        }
+    if ($user && Hash::check($credentials['password'], $user->password)) {
+        session(['usuario' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'rol' => $user->rol ?? 'usuario',
+        ]]);
+        return redirect('/dashboard');
     }
 
     return back()->withErrors(['email' => 'Credenciales incorrectas']);
 });
 
-// POST registro (solo simulado, no guarda en DB)
+// POST registro real guardando en base de datos
 Route::post('/register', function (Request $request) {
-    $datos = $request->only('email', 'password');
+    $request->validate([
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+    ]);
+
+    $user = User::create([
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'name' => $request->email,
+    ]);
 
     session(['usuario' => [
-        'email' => $datos['email'],
-        'password' => $datos['password'],
-        'rol' => 'nuevo'
+        'id' => $user->id,
+        'email' => $user->email,
+        'rol' => 'usuario',
     ]]);
 
     return redirect('/dashboard');
 });
 
-// Dashboard (protegido por sesión)
+// Dashboard protegido por sesión
 Route::get('/dashboard', function () {
     if (!session()->has('usuario')) {
         return redirect('/login');
@@ -70,7 +84,14 @@ Route::get('/logout', function () {
     return redirect('/login');
 });
 
-Route::get('usuario/perfil', [App\Http\Controllers\UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
+// Rutas perfil usuario
+Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
+
 Route::post('usuario/perfil', function (Request $request) {
     return redirect()->back()->with('success', 'Datos guardados');
 })->name('usuario.perfil.guardar');
+
+// Rutas para formulario de contacto
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
