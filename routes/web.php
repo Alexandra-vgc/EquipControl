@@ -92,6 +92,7 @@ Route::post('usuario/perfil', function (Request $request) {
 })->name('usuario.perfil.guardar');
 
 // Rutas para formulario de contacto
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.index');
+
 
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');

@@ -94,8 +94,8 @@ return [
         ],
 
         [
-            'text'  => 'Contacto',
-            'route' => 'contacto.show',
+            'text'  => 'Contactanos',
+            'route' => 'contact.index',
             'icon'  => 'fas fa-envelope',
         ],
 
