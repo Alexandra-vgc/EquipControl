@@ -86,16 +86,19 @@
 
 @section('css')
     <style>
+        /* Fondo general */
         body {
             background-color: #467B79 !important;
         }
 
+        /* Título principal */
         h1 {
             color: #ffffff;
             font-weight: bold;
             margin-bottom: 20px;
         }
 
+        /* Estilo general para las tarjetas */
         .small-box {
             position: relative;
             padding: 15px;
@@ -130,12 +133,14 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
 
+        /* Texto blanco específico solo para Devoluciones Pendientes */
         .box-devoluciones .inner h3,
         .box-devoluciones .inner p,
         .box-devoluciones .small-box-footer {
             color: #ffffff !important;
         }
 
+        /* (Opcional) Estilos para futuras tarjetas o tablas */
         .card {
             background-color: #ffffff;
             border-radius: 10px;
@@ -167,4 +172,4 @@
 
 @section('js')
     <script> console.log("Hi, I'm using the laravel-AdminLTE package!");</script>
-@stop
+@stop 
