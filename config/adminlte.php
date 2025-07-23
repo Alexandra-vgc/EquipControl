@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     'title' => 'EquipControl',
     'title_prefix' => 'Panel | ',
     'title_postfix' => ' | Instituto Sudamericano',
@@ -91,6 +92,15 @@ return [
             'url'  => 'historial',
             'icon' => 'fas fa-history',
         ],
+
+        [
+            'text'  => 'Contacto',
+            'route' => 'contacto.show',
+            'icon'  => 'fas fa-envelope',
+        ],
+
+
+        
 
         ['header' => 'CUENTA'],
         [

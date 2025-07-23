@@ -4,6 +4,7 @@
 @section('content_header')
     <h1 class="text-bold text-dark">Panel de Control - EquipControl</h1>
 @stop
+
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -19,6 +20,7 @@
             <x-adminlte-small-box title="Documentos Generados" text="22 documentos" icon="fas fa-file-alt" theme="danger" url="#" url-text="Ver reportes"/>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-6">
             <x-adminlte-card title="Últimas Entregas" theme="info" icon="fas fa-share-square">
@@ -39,6 +41,7 @@
             </x-adminlte-card>
         </div>
     </div>
+
     <div class="row mt-4">
         <div class="col-12">
             <x-adminlte-card title="Resumen General de Equipos" theme="warning" icon="fas fa-database">
@@ -79,24 +82,20 @@
             </x-adminlte-card>
         </div>
     </div>
-
 @stop
 
 @section('css')
     <style>
-        /* Fondo general */
         body {
             background-color: #467B79 !important;
         }
 
-        /* Título principal */
         h1 {
             color: #ffffff;
             font-weight: bold;
             margin-bottom: 20px;
         }
 
-        /* Estilo general para las tarjetas */
         .small-box {
             position: relative;
             padding: 15px;
@@ -131,14 +130,12 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
 
-        /* Texto blanco específico solo para Devoluciones Pendientes */
         .box-devoluciones .inner h3,
         .box-devoluciones .inner p,
         .box-devoluciones .small-box-footer {
             color: #ffffff !important;
         }
 
-        /* (Opcional) Estilos para futuras tablas o tarjetas */
         .card {
             background-color: #ffffff;
             border-radius: 10px;
@@ -167,6 +164,7 @@
         }
     </style>
 @stop
+
 @section('js')
     <script> console.log("Hi, I'm using the laravel-AdminLTE package!");</script>
-@stop 
+@stop
