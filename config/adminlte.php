@@ -30,7 +30,7 @@ return [
     ],
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/equipcontrol_logo.png',
@@ -63,7 +63,7 @@ return [
 
     'right_sidebar' => false,
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -124,6 +124,8 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
     ],
+
+    
 
     'plugins' => [
         'Chartjs' => [

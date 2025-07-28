@@ -1,11 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\ContactController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,86 +9,59 @@ use App\Http\Controllers\ContactController;
 |--------------------------------------------------------------------------
 */
 
-// Redirige la raíz a login
+// Ruta raíz redirige al login
 Route::get('/', function () {
-    return redirect('/login');
+     return redirect()->route('login');
 });
 
-// Vista de login
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+// Rutas de autenticación Laravel (login, registro, logout)
+Auth::routes(['register' => true]);
 
-// Vista de registro
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+// Redirección por rol después del login
+Route::get('/redireccionar-por-rol', function () {
+    $user = Auth::user();
 
-// POST login con usuarios reales en base de datos
-Route::post('/login', function (Request $request) {
-    $credentials = $request->only('email', 'password');
-
-    $user = User::where('email', $credentials['email'])->first();
-
-    if ($user && Hash::check($credentials['password'], $user->password)) {
-        session(['usuario' => [
-            'id' => $user->id,
-            'email' => $user->email,
-            'rol' => $user->rol ?? 'usuario',
-        ]]);
-        return redirect('/dashboard');
+    if ($user->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->hasRole('editor')) {
+        return redirect()->route('editor.dashboard');
+    } elseif ($user->hasRole('lector')) {
+        return redirect()->route('lector.dashboard');
+    } else {
+        Auth::logout();
+        return redirect('/login')->with('error', 'Rol no asignado.');
     }
+})->middleware(['auth']);
 
-    return back()->withErrors(['email' => 'Credenciales incorrectas']);
+// Dashboards protegidos
+Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+Route::middleware(['auth', 'role:editor'])->get('/editor/dashboard', function () {
+    return view('editor.dashboard');
+})->name('editor.dashboard');
+
+Route::middleware(['auth', 'role:lector'])->get('/lector/dashboard', function () {
+    return view('lector.dashboard');
+})->name('lector.dashboard');
+
+// Rutas con permisos para contenido
+Route::middleware(['auth'])->group(function () {
+    Route::get('/contenido', [\App\Http\Controllers\ContenidoController::class, 'index'])->middleware('permission:ver');
+    Route::get('/contenido/crear', [\App\Http\Controllers\ContenidoController::class, 'create'])->middleware('permission:crear');
+    Route::post('/contenido', [\App\Http\Controllers\ContenidoController::class, 'store'])->middleware('permission:crear');
+    Route::get('/contenido/{id}/editar', [\App\Http\Controllers\ContenidoController::class, 'edit'])->middleware('permission:editar');
+    Route::delete('/contenido/{id}', [\App\Http\Controllers\ContenidoController::class, 'destroy'])->middleware('permission:eliminar');
 });
 
-// POST registro real guardando en base de datos
-Route::post('/register', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
-    ]);
+// --- AÑADIDO: RUTAS DEL MÓDULO CONTACT ---
 
-    $user = User::create([
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'name' => $request->email,
-    ]);
-
-    session(['usuario' => [
-        'id' => $user->id,
-        'email' => $user->email,
-        'rol' => 'usuario',
-    ]]);
-
-    return redirect('/dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact.index');
+    Route::get('/contact/create', [\App\Http\Controllers\ContactController::class, 'create'])->name('contact.create');
+    Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+    Route::get('/contact/{id}/edit', [\App\Http\Controllers\ContactController::class, 'edit'])->name('contact.edit');
+    Route::put('/contact/{id}', [\App\Http\Controllers\ContactController::class, 'update'])->name('contact.update');
+    Route::delete('/contact/{id}', [\App\Http\Controllers\ContactController::class, 'destroy'])->name('contact.destroy');
 });
-
-// Dashboard protegido por sesión
-Route::get('/dashboard', function () {
-    if (!session()->has('usuario')) {
-        return redirect('/login');
-    }
-
-    $usuario = session('usuario');
-    return view('dashboard', compact('usuario'));
-});
-
-// Cerrar sesión
-Route::get('/logout', function () {
-    session()->forget('usuario');
-    return redirect('/login');
-});
-
-// Rutas perfil usuario
-Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
-
-Route::post('usuario/perfil', function (Request $request) {
-    return redirect()->back()->with('success', 'Datos guardados');
-})->name('usuario.perfil.guardar');
-
-// Rutas para formulario de contacto
-Route::get('/contact', [ContactController::class, 'show'])->name('contact.index');
-
-
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');

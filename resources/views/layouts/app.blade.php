@@ -76,5 +76,28 @@
             @yield('content')
         </main>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const logoutLink = document.querySelector('.logout-link a');
+        if(logoutLink) {
+            logoutLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                let form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ route('logout') }}";
+                form.style.display = 'none';
+
+                let token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = "{{ csrf_token() }}";
+
+                form.appendChild(token);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+    });
+</script>
 </body>
 </html>
