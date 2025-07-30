@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 
 /*
@@ -75,7 +76,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('usuario/perfil', function (Illuminate\Http\Request $request) {
         return redirect()->back()->with('success', 'Datos guardados');
     })->name('usuario.perfil.guardar');
-
     
 });
 
@@ -90,7 +90,4 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/actualizar/{id}', [AdminController::class, 'update'])->name('actualizar');
 
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('eliminar');
-
-    Route::get('/solicitudes-entrega', [SolicitudEntregaController::class, 'index'])->name('solicitudes.index');
-
 });
