@@ -112,7 +112,7 @@ return [
             'text' => 'Cerrar sesión',
             'url'  => 'logout',
             'icon' => 'fas fa-sign-out-alt',
-            'method' => 'post',
+            'method' => 'POST',
         ],
     ],
 

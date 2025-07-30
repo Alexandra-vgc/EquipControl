@@ -90,4 +90,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/actualizar/{id}', [AdminController::class, 'update'])->name('actualizar');
 
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('eliminar');
+
+    Route::get('/solicitudes', [App\Http\Controllers\Admin\SolicitudEntregaController::class, 'index'])
+        ->name('solicitudes.index')
+        ->middleware('permission:ver');
 });
