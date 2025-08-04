@@ -74,8 +74,9 @@ return [
         ['header' => 'GESTIÓN DE EQUIPOS'],
         [
             'text' => 'Solicitudes de Entrega',
-            'url'  => 'entregas/solicitudes',
+            'route'  => 'admin.solicitudes.index',
             'icon' => 'fas fa-file-signature',
+            'can'   => 'ver',
         ],
         [
             'text' => 'Equipos Asignados',

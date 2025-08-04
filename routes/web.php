@@ -6,6 +6,9 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\SolicitudEntregaController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +94,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('eliminar');
 
-    Route::get('/solicitudes', [App\Http\Controllers\Admin\SolicitudEntregaController::class, 'index'])
-        ->name('solicitudes.index')
-        ->middleware('permission:ver');
+     Route::prefix('solicitudes')->name('solicitudes.')->group(function () {
+        Route::get('/', [SolicitudEntregaController::class, 'index'])->name('index')->middleware('permission:ver');
+        Route::get('/crear', [SolicitudEntregaController::class, 'create'])->name('create')->middleware('permission:crear');
+        Route::post('/', [SolicitudEntregaController::class, 'store'])->name('store')->middleware('permission:crear');
+        Route::get('/{id}/editar', [SolicitudEntregaController::class, 'edit'])->name('edit')->middleware('permission:editar');
+        Route::put('/{id}', [SolicitudEntregaController::class, 'update'])->name('update')->middleware('permission:editar');
+        Route::delete('/{id}', [SolicitudEntregaController::class, 'destroy'])->name('destroy')->middleware('permission:eliminar');
+        Route::put('solicitudes/{solicitud}', [SolicitudController::class, 'update'])->name('admin.solicitudes.update');
+
+    });
 });
+
