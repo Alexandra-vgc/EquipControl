@@ -29,21 +29,13 @@ class SolicitudEntregaController extends Controller
     {
         // Validar los datos antes de guardar
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'monitor' => 'required|string|max:255',
-            'cpu' => 'required|string|max:255',
-            'mainboard' => 'required|string|max:255',
-            'disco_duro' => 'required|string|max:255',
-            'memoria_ram' => 'required|string|max:255',
-            'otros' => 'nullable|string|max:255',
-            'estado' => 'required|string|in:pendiente,aprobado,negado',
+        'nombre' => 'required|string|max:255',
+        'apellido' => 'required|string|max:255',
+        'estado' => 'required|string|in:pendiente,aprobado,negado',
         ]);
-
         // Crear solicitud con solo los campos permitidos
         Solicitud::create($request->only([
-            'nombre', 'apellido', 'monitor', 'cpu', 'mainboard',
-            'disco_duro', 'memoria_ram', 'otros', 'estado'
+            'nombre', 'apellido', 'estado'
         ]));
 
         return redirect()->route('admin.solicitudes.index')->with('success', 'Solicitud registrada correctamente.');
@@ -61,20 +53,13 @@ class SolicitudEntregaController extends Controller
         $request->validate([
         'nombre' => 'required|string|max:255',
         'apellido' => 'required|string|max:255',
-        'monitor' => 'required|string|max:255',
-        'cpu' => 'required|string|max:255',
-        'mainboard' => 'required|string|max:255',
-        'disco_duro' => 'required|string|max:255',
-        'memoria_ram' => 'required|string|max:255',
-        'otros' => 'nullable|string|max:255',
         'estado' => 'required|in:pendiente,aprobado,negado',
         ]);
 
         $solicitud = Solicitud::findOrFail($id);
 
         $solicitud->update($request->only([
-            'nombre', 'apellido', 'monitor', 'cpu', 'mainboard',
-            'disco_duro', 'memoria_ram', 'otros', 'estado'
+            'nombre', 'apellido','estado'
         ]));
 
         return redirect()->route('admin.solicitudes.index')->with('success', 'Solicitud actualizada correctamente.');

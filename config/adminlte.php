@@ -76,7 +76,7 @@ return [
             'text' => 'Solicitudes de Entrega',
             'route'  => 'admin.solicitudes.index',
             'icon' => 'fas fa-file-signature',
-            'can'   => 'ver',
+             'can'  => 'ver-solicitudes',
         ],
         [
             'text' => 'Equipos Asignados',

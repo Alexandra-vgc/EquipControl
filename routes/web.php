@@ -95,14 +95,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('eliminar');
 
      Route::prefix('solicitudes')->name('solicitudes.')->group(function () {
-        Route::get('/', [SolicitudEntregaController::class, 'index'])->name('index')->middleware('permission:ver');
-        Route::get('/crear', [SolicitudEntregaController::class, 'create'])->name('create')->middleware('permission:crear');
-        Route::post('/', [SolicitudEntregaController::class, 'store'])->name('store')->middleware('permission:crear');
-        Route::get('/{id}/editar', [SolicitudEntregaController::class, 'edit'])->name('edit')->middleware('permission:editar');
-        Route::put('/{id}', [SolicitudEntregaController::class, 'update'])->name('update')->middleware('permission:editar');
-        Route::delete('/{id}', [SolicitudEntregaController::class, 'destroy'])->name('destroy')->middleware('permission:eliminar');
-        Route::put('solicitudes/{solicitud}', [SolicitudController::class, 'update'])->name('admin.solicitudes.update');
-
+    Route::get('/', [SolicitudEntregaController::class, 'index'])->name('index');
+    Route::get('/crear', [SolicitudEntregaController::class, 'create'])->name('create');
+    Route::post('/', [SolicitudEntregaController::class, 'store'])->name('store');
+    Route::get('/{id}/editar', [SolicitudEntregaController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [SolicitudEntregaController::class, 'update'])->name('update');
+    Route::delete('/{id}', [SolicitudEntregaController::class, 'destroy'])->name('destroy');
     });
 });
 
