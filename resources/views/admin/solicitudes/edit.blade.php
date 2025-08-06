@@ -21,36 +21,6 @@
             <input type="text" name="apellido" value="{{ old('apellido', $solicitud->apellido) }}" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label>Monitor:</label>
-            <input type="text" name="monitor" value="{{ old('monitor', $solicitud->monitor) }}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>CPU:</label>
-            <input type="text" name="cpu" value="{{ old('cpu', $solicitud->cpu) }}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>Mainboard:</label>
-            <input type="text" name="mainboard" value="{{ old('mainboard', $solicitud->mainboard) }}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>Disco Duro:</label>
-            <input type="text" name="disco_duro" value="{{ old('disco_duro', $solicitud->disco_duro) }}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>Memoria RAM:</label>
-            <input type="text" name="memoria_ram" value="{{ old('memoria_ram', $solicitud->memoria_ram) }}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>Otros:</label>
-            <input type="text" name="otros" value="{{ old('otros', $solicitud->otros) }}" class="form-control">
-        </div>
-
        <div class="form-group">
         <label for="estado">Estado:</label>
         <select name="estado" class="form-control" required>

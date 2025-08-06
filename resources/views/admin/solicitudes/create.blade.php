@@ -32,36 +32,6 @@
     </div>
 
     <div class="form-group">
-        <label>Monitor:</label>
-        <input type="text" name="monitor" class="form-control" value="{{ old('monitor') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label>CPU:</label>
-        <input type="text" name="cpu" class="form-control" value="{{ old('cpu') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Mainboard:</label>
-        <input type="text" name="mainboard" class="form-control" value="{{ old('mainboard') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Disco Duro:</label>
-        <input type="text" name="disco_duro" class="form-control" value="{{ old('disco_duro') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Memoria RAM:</label>
-        <input type="text" name="memoria_ram" class="form-control" value="{{ old('memoria_ram') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label>Otros:</label>
-        <input type="text" name="otros" class="form-control" value="{{ old('otros') }}">
-    </div>
-
-    <div class="form-group">
         <label>Estado:</label>
         <select name="estado" class="form-control" required>
             <option value="pendiente" {{ old('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>

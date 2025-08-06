@@ -24,36 +24,29 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Nombre completo</th>
-                <th>Monitor</th>
-                <th>CPU</th>
-                <th>Mainboard</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach($solicitudes as $solicitud)
-                <tr>
-                    <td>{{ $solicitud->id }}</td>
-                    <td>{{ $solicitud->nombre }} {{ $solicitud->apellido }}</td>
-                    <td>{{ $solicitud->monitor }}</td>
-                    <td>{{ $solicitud->cpu }}</td>
-                    <td>{{ $solicitud->mainboard }}</td>
+                 <tr>
+                    <td>{{ $solicitud->nombre }}</td>
+                    <td>{{ $solicitud->apellido }}</td>
                     <td>
                         @php
                         $estado = strtolower($solicitud->estado);
                         @endphp
                         @if($estado == 'aprobado')
-                        <span class="badge bg-success">Aprobado</span>
+                            <span class="badge bg-success">Aprobado</span>
                         @elseif($estado == 'negado')
-                        <span class="badge bg-danger">Negado</span>
+                            <span class="badge bg-danger">Negado</span>
                         @else
-                        <span class="badge bg-warning text-dark">Pendiente</span>
+                            <span class="badge bg-warning text-dark">Pendiente</span>
                         @endif
                     </td>
-
                     <td>
                         <a href="{{ route('admin.solicitudes.edit', $solicitud) }}" class="btn btn-sm btn-primary">Editar</a>
                         <form action="{{ route('admin.solicitudes.destroy', $solicitud) }}" method="POST" style="display:inline">
