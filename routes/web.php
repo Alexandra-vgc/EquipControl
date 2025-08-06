@@ -7,6 +7,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\SolicitudEntregaController;
+use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\AsignacionController;
 
 
 
@@ -85,6 +87,12 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+     // 👇 NUEVAS RUTAS para asignar roles a usuarios
+    Route::get('/usuario/asignar', [UsuarioController::class, 'asignar'])->name('usuario.asignar');
+    Route::post('/usuario/asignar', [UsuarioController::class, 'asignarRol'])->name('usuario.asignar.store');
+
+    
+   Route::get('/usuario/asignar', [UsuarioController::class, 'asignar'])->name('usuario.asignar');
 
     Route::get('/crear', [AdminController::class, 'create'])->name('crear');
     Route::post('/guardar', [AdminController::class, 'store'])->name('guardar');
@@ -106,3 +114,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     });
 });
 
+Route::prefix('equipos')->name('equipos.')->group(function () {
+    Route::get('/cpu', [EquipoController::class, 'cpu'])->name('cpu');
+    Route::get('/monitor', [EquipoController::class, 'monitor'])->name('monitor');
+    Route::get('/teclado', [EquipoController::class, 'teclado'])->name('teclado');
+    Route::get('/mouse', [EquipoController::class, 'mouse'])->name('mouse');
+});
+
+Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
+    Route::get('/entregas/crear', [AsignacionController::class, 'create'])->name('entregas.create');
+    Route::post('/entregas', [AsignacionController::class, 'store'])->name('entregas.store');
+   Route::get('/entregas/{id}/pdf', [AsignacionController::class, 'pdf'])->name('entregas.pdf');
+
+    Route::get('/equipos/crear', [EquipoController::class, 'create'])->name('equipos.create');
+    Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
+});

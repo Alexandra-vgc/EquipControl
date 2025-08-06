@@ -88,17 +88,72 @@ return [
             'url'  => 'equipos/devoluciones',
             'icon' => 'fas fa-undo',
         ],
+
+        ['header' => 'GESTIÓN DE EQUIPOS'],
+        [
+        'text'    => 'Equipos',
+        'icon'    => 'fas fa-desktop',
+        'submenu' => [
+        [
+            'text' => 'CPU',
+            'route'  => 'equipos.cpu',
+            'icon'  => 'fas fa-microchip',
+        ],
+        [
+            'text' => 'Monitor',
+            'route'  => 'equipos.monitor',
+            'icon'  => 'fas fa-tv',
+        ],
+        [
+            'text' => 'Teclado',
+            'route'  => 'equipos.teclado',
+            'icon'  => 'fas fa-keyboard',
+        ],
+        [
+            'text' => 'Mouse',
+            'route'  => 'equipos.mouse',
+            'icon'  => 'fas fa-mouse',
+        ],
+    ],
+],
+
+        [
+            'text'  => 'Nuevo Equipo',
+            'route' => 'equipos.create',
+            'icon'  => 'fas fa-plus-circle', 
+        ],
+
+        [
+            'text' => 'Nueva Entrega',
+            'route' => 'entregas.create',
+            'icon'  => 'fas fa-file-signature',
+        ],
+
         [
             'text' => 'Historial',
             'url'  => 'historial',
             'icon' => 'fas fa-history',
         ],
 
+        
+        [
+            'text' => 'Usuarios',
+            'icon' => 'fas fa-users',
+            'submenu' => [
+        [
+            'text' => 'Asignar Rol',
+          'route'  => 'admin.usuario.asignar', 
+            'icon' => 'fas fa-user-tag',
+        ],
+    ],
+],
+
         [
             'text'  => 'Contacto',
             'route' => 'contact.index',
             'icon'  => 'fas fa-envelope',
         ],
+
 
 
         
@@ -115,7 +170,7 @@ return [
             'icon' => 'fas fa-sign-out-alt',
             'method' => 'POST',
         ],
-    ],
+        ],
 
     'filters' => [
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
