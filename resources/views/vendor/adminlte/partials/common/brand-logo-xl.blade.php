@@ -1,12 +1,20 @@
 @inject('layoutHelper', 'JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
 
-@php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url', 'home') )
-
-@if (config('adminlte.use_route_url', false))
-    @php( $dashboard_url = $dashboard_url ? route($dashboard_url) : '' )
-@else
-    @php( $dashboard_url = $dashboard_url ? url($dashboard_url) : '' )
-@endif
+@php
+    if (Auth::check()) {
+        if (Auth::user()->hasRole('admin')) {
+            $dashboard_url = route('admin.dashboard');
+        } elseif (Auth::user()->hasRole('editor')) {
+            $dashboard_url = route('editor.dashboard');
+        } elseif (Auth::user()->hasRole('lector')) {
+            $dashboard_url = route('lector.dashboard');
+        } else {
+            $dashboard_url = url('/');
+        }
+    } else {
+        $dashboard_url = url('/');
+    }
+@endphp
 
 <a href="{{ $dashboard_url }}"
     @if($layoutHelper->isLayoutTopnavEnabled())
