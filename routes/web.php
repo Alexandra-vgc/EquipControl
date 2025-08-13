@@ -9,6 +9,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\SolicitudEntregaController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\AsignacionController;
+use App\Http\Controllers\DevolucionController;
+
 
 
 
@@ -127,3 +129,11 @@ Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
     Route::get('/equipos/crear', [EquipoController::class, 'create'])->name('equipos.create');
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
 });
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // otras rutas admin...
+
+    Route::resource('devoluciones', DevolucionController::class);
+});
+
+
+
