@@ -9,6 +9,8 @@ class Devolucion extends Model
 {
     use HasFactory;
 
+    protected $table = 'devoluciones'; // <- fuerza el nombre correcto de la tabla
+
     protected $fillable = [
         'user_id',
         'equipo_id',

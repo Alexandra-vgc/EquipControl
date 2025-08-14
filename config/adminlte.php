@@ -85,7 +85,7 @@ return [
         ],
         [
             'text' => 'Devoluciones',
-            'url'  => 'equipos/devoluciones',
+            'route'  => 'admin.devoluciones.create',
             'icon' => 'fas fa-undo',
         ],
 
