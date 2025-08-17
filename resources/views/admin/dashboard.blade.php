@@ -16,7 +16,15 @@
             <x-adminlte-small-box title="Equipos Asignados" text="38 en uso" icon="fas fa-laptop" theme="success" url="#" url-text="Ver equipos"/>
         </div>
         <div class="col-md-3">
-            <x-adminlte-small-box class="box-devoluciones" title="Devoluciones Pendientes" text="6 equipos" icon="fas fa-undo-alt" theme="warning" url="#" url-text="Ver devoluciones"/>
+            <x-adminlte-small-box 
+    class="box-devoluciones" 
+    title="Devoluciones Pendientes" 
+    text="6 equipos" 
+    icon="fas fa-undo-alt" 
+    theme="warning" 
+    url="{{ route('admin.devoluciones.create') }}" 
+    url-text="Ver devoluciones"/>
+
         </div>
         <div class="col-md-3">
             <x-adminlte-small-box title="Documentos Generados" text="22 documentos" icon="fas fa-file-alt" theme="danger" url="#" url-text="Ver reportes"/>
