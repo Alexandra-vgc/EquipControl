@@ -94,26 +94,11 @@ return [
         'text'    => 'Equipos',
         'icon'    => 'fas fa-desktop',
         'submenu' => [
-        [
-            'text' => 'CPU',
-            'route'  => 'equipos.cpu',
-            'icon'  => 'fas fa-microchip',
-        ],
-        [
-            'text' => 'Monitor',
-            'route'  => 'equipos.monitor',
-            'icon'  => 'fas fa-tv',
-        ],
-        [
-            'text' => 'Teclado',
-            'route'  => 'equipos.teclado',
-            'icon'  => 'fas fa-keyboard',
-        ],
-        [
-            'text' => 'Mouse',
-            'route'  => 'equipos.mouse',
-            'icon'  => 'fas fa-mouse',
-        ],
+            [
+                'text' => 'Inventario de Equipos',
+                'url'  => 'equipos/inventario',
+                'icon' => 'fas fa-boxes',
+            ],
     ],
 ],
 
