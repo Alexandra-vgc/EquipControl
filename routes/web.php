@@ -111,6 +111,7 @@ Route::prefix('equipos')->name('equipos.')->group(function () {
     // Rutas para ver y editar equipos
     Route::get('/{equipo}', [EquipoController::class, 'show'])->name('show');
     Route::get('/{equipo}/editar', [EquipoController::class, 'edit'])->name('edit');
+    Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');
     Route::delete('/{equipo}', [EquipoController::class, 'destroy'])->name('destroy');
 });
 

@@ -17,8 +17,8 @@ class EquipoController extends Controller
     // 🔹 Método para mostrar el formulario de crear equipo (tu método actual)
     public function create()
     {
-        $tipos = ['CPU','Monitor','Teclado','Mouse','Impresora','Laptop','Tablet','Router','Switch','UPS','Proyector','Otros'];
-        $estados = ['Disponible','Asignado','En Reparación','Dañado','Obsoleto','Dado de Baja'];
+        $tipos = ['CPU','Monitor','Teclado','Mouse'];
+        $estados = ['Disponible','Asignado','En Reparación','Dañado'];
         return view('equipos.create', compact('tipos', 'estados'));
     }
 
