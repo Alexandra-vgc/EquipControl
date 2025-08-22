@@ -23,7 +23,8 @@ class ContactMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Nuevo mensaje de contacto')
+        return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                    ->subject('Nuevo mensaje de contacto')
                     ->markdown('emails.contact');
     }
 }
