@@ -27,8 +27,11 @@ class ContactController extends Controller
         ];
 
         Mail::send('emails.contact', $data, function ($message) use ($data) {
-            $message->to('contacto@equipcontrol.com')
-                    ->subject('Nuevo mensaje de contacto');
+            $message->to(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'))
+                    ->subject('Nuevo mensaje de contacto')
+                    ->replyTo($data['correo'], $data['nombre']);
+
+
         });
 
         return redirect()->back()->with('success', 'Mensaje enviado correctamente (simulado).');
