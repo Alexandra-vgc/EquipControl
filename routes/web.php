@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SolicitudEntregaController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\Admin\DevolucionController;
+use App\Http\Controllers\HistorialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,3 +125,10 @@ Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
     Route::get('/equipos/crear', [EquipoController::class, 'create'])->name('equipos.create');
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
 });
+
+// Ruta Historial
+
+Route::get('/historial', [HistorialController::class, 'index'])
+    ->middleware(['auth','can:ver-historial'])
+    ->name('historial.index');
+

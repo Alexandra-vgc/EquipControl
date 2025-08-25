@@ -45,13 +45,7 @@ class AsignacionController extends Controller
                     'asignacion_id' => $asig->id,
                     'equipo_id'     => $equipoId,
                 ]);
-
-                // Aquí usamos Eloquent para que se dispare el observer
-                $equipo = Equipo::find($equipoId);
-                if ($equipo) {
-                    $equipo->estado = 'Asignado';
-                    $equipo->save(); // 🔥 dispara el EquipoObserver
-                }
+                Equipo::where('id', $equipoId)->update(['estado' => 'Asignado']);
             }
 
             return $asig;
