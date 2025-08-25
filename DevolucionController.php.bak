@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Devolucion;
+use App\Models\User;
+use App\Models\Equipo;
+use Illuminate\Support\Facades\DB;
+
+class DevolucionController extends Controller
+{
+    // Muestra formulario
+    public function create()
+    {
+        $usuarios = User::orderBy('name')->get();
+        $equipos = Equipo::orderBy('marca')->get();
+        return view('admin.devoluciones.create', compact('usuarios', 'equipos'));
+    }
+
+    // Guarda la devolución y marca el equipo como disponible
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'equipo_id' => 'required|exists:equipos,id',
+            'fecha_devolucion' => 'required|date',
+            'observaciones' => 'nullable|string|max:1000',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $devol = Devolucion::create([
+                'user_id' => $request->user_id,
+                'equipo_id' => $request->equipo_id,
+                'fecha_devolucion' => $request->fecha_devolucion,
+                'observaciones' => $request->observaciones,
+            ]);
+
+            $equipo = Equipo::findOrFail($request->equipo_id);
+            $equipo->estado = 'disponible';
+            $equipo->save();
+
+            DB::commit();
+            return redirect()->route('admin.devoluciones.create')
+                             ->with('success', 'Devolución registrada con éxito y equipo marcado como disponible.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Error al registrar la devolución: '.$e->getMessage()]);
+        }
+    }
+
+    // Vista detalle
+    public function show(Devolucion $devolucion)
+    {
+        return view('admin.devoluciones.show', ['devol' => $devolucion->load('equipo','user')]);
+    }
+}

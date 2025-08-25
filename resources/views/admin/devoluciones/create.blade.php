@@ -13,6 +13,8 @@
 @endif
 
 <form action="{{ route('admin.devoluciones.store') }}" method="POST">
+
+
     @csrf
 
     <div class="row mb-3">
@@ -29,7 +31,9 @@
             <label>Equipo</label>
             <select name="equipo_id" class="form-control" required>
                 @foreach($equipos as $e)
-                    <option value="{{ $e->id }}">{{ $e->nombre }}</option>
+                    <option value="{{ $e->id }}">
+                        {{ trim("{$e->tipo} {$e->marca} {$e->modelo} {$e->serie}") ?: ($e->codigo ?? $e->id) }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -49,3 +53,4 @@
 </form>
 
 @stop
+

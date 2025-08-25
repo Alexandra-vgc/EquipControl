@@ -27,13 +27,14 @@ class ContactController extends Controller
         ];
 
         Mail::send('emails.contact', $data, function ($message) use ($data) {
+            // Forzamos que siempre haya un from válido
+            $message->from(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'), env('MAIL_FROM_NAME', 'EquipControl'));
             $message->to(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'))
                     ->subject('Nuevo mensaje de contacto')
                     ->replyTo($data['correo'], $data['nombre']);
-
-
         });
 
-        return redirect()->back()->with('success', 'Mensaje enviado correctamente (simulado).');
+        return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
     }
 }
+

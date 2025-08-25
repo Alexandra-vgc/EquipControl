@@ -118,6 +118,7 @@ return [
             'text' => 'Historial',
             'url'  => 'historial',
             'icon' => 'fas fa-history',
+            'can'  => 'ver-historial',
         ],
 
         
