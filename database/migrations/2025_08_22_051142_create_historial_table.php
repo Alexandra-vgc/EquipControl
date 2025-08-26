@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('equipo_id')->constrained('equipos')->onDelete('cascade');
             $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
-            $table->enum('accion', ['entrega', 'devolucion']);
+            $table->enum('accion', ['entrega', 'devolucion', 'actualizado', 'eliminado'])->change();
             $table->text('observaciones')->nullable();
             $table->timestamps();
         });

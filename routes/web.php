@@ -1,12 +1,11 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\SolicitudEntregaController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\Admin\DevolucionController;
@@ -85,16 +84,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/editar/{id}', [AdminController::class, 'edit'])->name('editar');
     Route::put('/actualizar/{id}', [AdminController::class, 'update'])->name('actualizar');
     Route::delete('/eliminar/{id}', [AdminController::class, 'destroy'])->name('eliminar');
-
-    // Solicitudes
-    Route::prefix('solicitudes')->name('solicitudes.')->group(function () {
-        Route::get('/', [SolicitudEntregaController::class, 'index'])->name('index');
-        Route::get('/crear', [SolicitudEntregaController::class, 'create'])->name('create');
-        Route::post('/', [SolicitudEntregaController::class, 'store'])->name('store');
-        Route::get('/{id}/editar', [SolicitudEntregaController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [SolicitudEntregaController::class, 'update'])->name('update');
-        Route::delete('/{id}', [SolicitudEntregaController::class, 'destroy'])->name('destroy');
-    });
 
     // Devoluciones
     Route::prefix('devoluciones')->name('devoluciones.')->group(function () {

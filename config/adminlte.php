@@ -71,24 +71,12 @@ return [
     'password_email_url' => 'password/email',
 
     'menu' => [
-        ['header' => 'GESTIÓN DE EQUIPOS'],
-        [
-            'text' => 'Solicitudes de Entrega',
-            'route'  => 'admin.solicitudes.index',
-            'icon' => 'fas fa-file-signature',
-             'can'  => 'ver-solicitudes',
-        ],
         [
             'text' => 'Equipos Asignados',
             'url'  => 'equipos/asignados',
             'icon' => 'fas fa-laptop',
         ],
-        [
-            'text' => 'Devoluciones',
-            'route'  => 'admin.devoluciones.create',
-            'icon' => 'fas fa-undo',
-        ],
-
+        
         ['header' => 'GESTIÓN DE EQUIPOS'],
         [
         'text'    => 'Equipos',
@@ -113,6 +101,13 @@ return [
             'route' => 'entregas.create',
             'icon'  => 'fas fa-file-signature',
         ],
+
+        [
+            'text' => 'Devoluciones',
+            'route'  => 'admin.devoluciones.create',
+            'icon' => 'fas fa-undo',
+        ],
+
 
         [
             'text' => 'Historial',

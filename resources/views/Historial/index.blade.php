@@ -62,8 +62,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            {{ $historiales->links() }}
+        <div class="card-footer clearfix">
+            {{ $historiales->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>

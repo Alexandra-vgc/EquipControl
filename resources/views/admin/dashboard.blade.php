@@ -8,11 +8,6 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            
-            <x-adminlte-small-box title="Solicitudes de Entrega" text="Ver solicitudes" icon="fas fa-clipboard-list" theme="info" url="{{ route('admin.solicitudes.index') }}" url-text="Ver solicitudes"/>
-            
-        </div>
-        <div class="col-md-3">
             <x-adminlte-small-box title="Equipos Asignados" text="38 en uso" icon="fas fa-laptop" theme="success" url="#" url-text="Ver equipos"/>
         </div>
         <div class="col-md-3">
