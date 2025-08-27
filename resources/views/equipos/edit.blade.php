@@ -1,6 +1,4 @@
-<!-- resources/views/equipos/edit.blade.php -->
-
-@extends('adminlte::page') <!-- Extiende la plantilla de AdminLTE -->
+@extends('adminlte::page')
 
 @section('title', 'Editar Equipo')
 
@@ -15,18 +13,14 @@
             <h3 class="card-title">Formulario de Edición</h3>
         </div>
 
-        <!-- Mostrar errores -->
         @if ($errors->any())
             <div class="alert alert-danger m-3">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                    @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
                 </ul>
             </div>
         @endif
 
-        <!-- Formulario -->
         <form action="{{ route('equipos.update', $equipo->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -34,53 +28,75 @@
 
                 <!-- Tipo -->
                 <div class="form-group">
-                        <label for="tipo">Tipo</label>
-                        <select name="tipo" id="tipo" class="form-control select2" style="width: 100%;">
-                            <option value="CPU" {{ $equipo->tipo == 'CPU' ? 'selected' : '' }}>CPU</option>
-                            <option value="Monitor" {{ $equipo->tipo == 'Monitor' ? 'selected' : '' }}>Monitor</option>
-                            <option value="Teclado" {{ $equipo->tipo == 'Teclado' ? 'selected' : '' }}>Teclado</option>
-                            <option value="Mouse" {{ $equipo->tipo == 'Mouse' ? 'selected' : '' }}>Mouse</option>
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" id="tipo" class="form-control" onchange="mostrarCampos()">
+                        @foreach($tipos as $t)
+                            <option value="{{ $t }}" {{ $equipo->tipo == $t ? 'selected' : '' }}>{{ $t }}</option>
+                        @endforeach
                     </select>
                 </div>
 
-                <!-- Marca -->
-                <div class="form-group">
-                    <label for="marca">Marca</label>
-                    <input type="text" name="marca" class="form-control" value="{{ $equipo->marca }}" placeholder="Marca del equipo">
+                <!-- Campos comunes -->
+                <div class="form-group campo-cpu" id="campo-tipo-cpu">
+                    <label for="tipo_cpu">CPU Tipo</label>
+                    <select name="tipo_cpu" class="form-control">
+                        <option value="Desktop">Desktop</option>
+                        <option value="Laptop">Laptop</option>
+                    </select>
                 </div>
 
-                <!-- Modelo -->
-                <div class="form-group">
-                    <label for="modelo">Modelo</label>
-                    <input type="text" name="modelo" class="form-control" value="{{ $equipo->modelo }}" placeholder="Modelo del equipo">
+                <div class="form-group campo-monitor-cpu" id="campo-marca">
+                    <label>Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{ $equipo->marca }}">
                 </div>
 
-                <!-- Serie -->
-                <div class="form-group">
-                    <label for="serie">Serie</label>
-                    <input type="text" name="serie" class="form-control" value="{{ $equipo->serie }}" placeholder="Número de serie">
+                <div class="form-group campo-monitor-cpu" id="campo-modelo">
+                    <label>Modelo</label>
+                    <input type="text" name="modelo" class="form-control" value="{{ $equipo->modelo }}">
                 </div>
 
-                <!-- Código -->
-                <div class="form-group">
-                    <label for="codigo">Código</label>
-                    <input type="text" name="codigo" class="form-control" value="{{ $equipo->codigo }}" placeholder="Código interno">
+                <div class="form-group campo-todos" id="campo-serial">
+                    <label>Serial</label>
+                    <input type="text" name="serial" class="form-control" value="{{ $equipo->serial }}">
                 </div>
 
-                <!-- Características -->
-                <div class="form-group">
-                    <label for="caracteristicas">Características</label>
-                    <textarea name="caracteristicas" class="form-control" rows="3" placeholder="Características">{{ $equipo->caracteristicas }}</textarea>
+                <div class="form-group campo-cpu" id="campo-mainboard-marca">
+                    <label>Mainboard Marca</label>
+                    <input type="text" name="mainboard_marca" class="form-control" value="{{ $equipo->mainboard_marca }}">
+                </div>
+
+                <div class="form-group campo-cpu" id="campo-mainboard-modelo">
+                    <label>Mainboard Modelo</label>
+                    <input type="text" name="mainboard_modelo" class="form-control" value="{{ $equipo->mainboard_modelo }}">
+                </div>
+
+                <div class="form-group campo-cpu" id="campo-procesador">
+                    <label>Procesador</label>
+                    <input type="text" name="procesador" class="form-control" value="{{ $equipo->procesador }}">
+                </div>
+
+                <div class="form-group campo-cpu" id="campo-ram">
+                    <label>Memoria RAM (GB)</label>
+                    <input type="number" name="memoria_ram" class="form-control" value="{{ $equipo->memoria_ram }}">
+                </div>
+
+                <div class="form-group campo-cpu" id="campo-disco">
+                    <label>Capacidad Disco</label>
+                    <input type="text" name="capacidad_disco" class="form-control" value="{{ $equipo->capacidad_disco }}">
+                </div>
+
+                <div class="form-group campo-monitor" id="campo-energia">
+                    <label>Energía</label>
+                    <input type="text" name="energia" class="form-control" value="{{ $equipo->energia }}">
                 </div>
 
                 <!-- Estado -->
                 <div class="form-group">
-                    <label for="estado">Estado</label>
-                    <select name="estado" id="estado" class="form-control" onchange="cambiarColor()">
-                            <option value="Disponible" {{ $equipo->estado == 'Disponible' ? 'selected' : '' }}>Disponible</option>
-                            <option value="Asignado" {{ $equipo->estado == 'Asignado' ? 'selected' : '' }}>Asignado</option>
-                            <option value="En Reparación" {{ $equipo->estado == 'En Reparación' ? 'selected' : '' }}>En Reparación</option>
-                            <option value="Dañado" {{ $equipo->estado == 'Dañado' ? 'selected' : '' }}>Dañado</option>
+                    <label>Estado</label>
+                    <select name="estado" class="form-control" onchange="cambiarColor()">
+                        @foreach($estados as $e)
+                            <option value="{{ $e }}" {{ $equipo->estado == $e ? 'selected' : '' }}>{{ $e }}</option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -97,21 +113,39 @@
 
 @section('js')
 <script>
-    function cambiarColor() {
-        const estado = document.getElementById('estado').value;
-        const select = document.getElementById('estado');
-        switch(estado){
-            case 'Disponible': select.style.backgroundColor = '#d4edda'; break; // verde claro
-            case 'Asignado': select.style.backgroundColor = '#fff3cd'; break; // amarillo
-            case 'En Reparación': select.style.backgroundColor = '#ffe5b4'; break; // naranja claro
-            case 'Dañado': select.style.backgroundColor = '#f8d7da'; break; // rojo claro
-            case 'Obsoleto': select.style.backgroundColor = '#e2e3e5'; break; // gris
-            case 'Dado de Baja': select.style.backgroundColor = '#d6d8d9'; break; // gris oscuro
-            default: select.style.backgroundColor = 'white';
-        }
-    }
+function mostrarCampos() {
+    const tipo = document.getElementById('tipo').value;
 
-    // Ejecutar al cargar la página
-    document.addEventListener('DOMContentLoaded', cambiarColor);
+    // Ocultar todos
+    document.querySelectorAll('.campo-cpu, .campo-monitor, .campo-monitor-cpu, .campo-todos').forEach(el => el.style.display = 'none');
+
+    if(tipo == 'CPU') {
+        document.querySelectorAll('.campo-cpu, .campo-monitor-cpu, .campo-todos').forEach(el => el.style.display = 'block');
+    } else if(tipo == 'Monitor') {
+        document.querySelectorAll('.campo-monitor, .campo-monitor-cpu, .campo-todos').forEach(el => el.style.display = 'block');
+    } else if(tipo == 'Teclado' || tipo == 'Mouse') {
+        document.querySelectorAll('.campo-todos').forEach(el => el.style.display = 'block');
+    }
+}
+
+function cambiarColor() {
+    const estado = document.querySelector('select[name="estado"]').value;
+    const select = document.querySelector('select[name="estado"]');
+    switch(estado){
+        case 'Disponible': select.style.backgroundColor = '#d4edda'; break;
+        case 'Asignado': select.style.backgroundColor = '#fff3cd'; break;
+        case 'En Reparación': select.style.backgroundColor = '#ffe5b4'; break;
+        case 'Dañado': select.style.backgroundColor = '#f8d7da'; break;
+        case 'Obsoleto': select.style.backgroundColor = '#e2e3e5'; break;
+        case 'Dado de Baja': select.style.backgroundColor = '#d6d8d9'; break;
+        default: select.style.backgroundColor = 'white';
+    }
+}
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarCampos();
+    cambiarColor();
+});
 </script>
 @stop

@@ -13,12 +13,18 @@ class Equipo extends Model
     
     protected $fillable = [
         'tipo',
-        'codigo', 
+        'codigo',
         'marca',
         'modelo',
-        'serie',
+        'serial', // antes era serie
         'caracteristicas',
-        'estado'
+        'estado',
+        'mainboard_marca',
+        'mainboard_modelo',
+        'procesador',
+        'memoria_ram',
+        'capacidad_disco',
+        'energia'
     ];
 
     // Definir los tipos disponibles (basado en tus datos)
