@@ -1,112 +1,120 @@
 @extends('adminlte::page')
 
-@section('title', 'Perfil de Usuario')
+@section('title', 'Mi Perfil')
 
 @section('content_header')
-    <h1>Perfil de Usuario</h1>
+    <h1 class="text-center">Mi Perfil</h1>
 @stop
 
 @section('content')
 
 @if(session('success'))
-    <div class="alert alert-success" id="success-msg">{{ session('success') }}</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 @endif
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        {{-- Muestra el nombre real o el falso si no existe --}}
-        <h3 class="card-title">{{ $usuario['name'] ?? 'Admin' }}</h3>
-        <button id="btn-editar" class="btn btn-outline-primary btn-sm">Editar perfil</button>
+<!-- 🔹 Envolvemos el row con un contenedor flex que centra -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="row w-100 d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle"
+                             src="{{ $user->avatar ? asset('storage/'.$user->avatar) : asset('storage/usuarios/usuario.png') }}"
+                             alt="Foto de perfil" width="150">
+                    </div>
+
+                    <h3 class="profile-username text-center">{{ $user->name }}</h3>
+                    <p class="text-muted text-center">{{ $user->email }}</p>
+
+                    <!-- Datos extras debajo -->
+                    <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                            <b><i class="fas fa-id-card"></i> Cédula</b>
+                            <span class="float-right">{{ $user->document ?? 'No registrado' }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b><i class="fas fa-phone"></i> Teléfono</b>
+                            <span class="float-right">{{ $user->phone ?? 'No registrado' }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b><i class="fas fa-envelope"></i> Correo</b>
+                            <span class="float-right">{{ $user->email }}</span>
+                        </li>
+                    </ul>
+
+                    <!-- Botón para abrir el modal -->
+                    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#editarPerfilModal">
+                        <i class="fas fa-edit"></i> Editar Perfil
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <form action="{{ route('usuario.perfil.guardar') }}" method="POST" enctype="multipart/form-data" id="perfil-form" class="card-body">
-        @csrf
-
-        <div class="row">
-            <div class="col-md-3 text-center">
-                <div class="position-relative d-inline-block">
-                    <img src="{{ asset('vendor/adminlte/dist/img/usuario.png') }}" alt="Foto perfil" id="foto-perfil" class="img-thumbnail rounded-circle" style="width:150px; height:150px; object-fit:cover;">
-                    <label for="input-foto" class="btn btn-primary btn-sm position-absolute" style="bottom:10px; right:10px; cursor:pointer;">
-                        <i class="fas fa-pencil-alt"></i>
-                    </label>
-                    <input type="file" id="input-foto" name="imagen" accept="image/*" style="display:none" disabled>
-                </div>
-            </div>
-
-            <div class="col-md-9">
-                <div class="form-group">
-                    <label>Nombre completo</label>
-                    <input type="text" name="name" class="form-control" value="{{ $usuario['name'] ?? 'Admin Admin' }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Correo electrónico</label>
-                    <input type="email" name="email" class="form-control" value="{{ $usuario['email'] ?? 'admin@gmail.com' }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Ciudad</label>
-                    <input type="text" name="ciudad" class="form-control" value="{{ $usuario['ciudad'] ?? 'Quito' }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label>País</label>
-                    <input type="text" name="pais" class="form-control" value="{{ $usuario['pais'] ?? 'Ecuador' }}" disabled>
-                </div>
-                <!-- Puedes agregar más campos igual -->
-            </div>
-        </div>
-
-        <div class="mt-3 text-right">
-            <button type="submit" class="btn btn-success" id="btn-guardar" style="display:none;">Guardar cambios</button>
-        </div>
-    </form>
 </div>
 
-<script>
-    const btnEditar = document.getElementById('btn-editar');
-    const btnGuardar = document.getElementById('btn-guardar');
-    const form = document.getElementById('perfil-form');
-    const inputs = form.querySelectorAll('input');
-    const inputFoto = document.getElementById('input-foto');
-    const fotoPerfil = document.getElementById('foto-perfil');
+<!-- Modal para editar perfil -->
+<div class="modal fade" id="editarPerfilModal" tabindex="-1" role="dialog" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{{ route('usuario.actualizarPerfil') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-    btnEditar.addEventListener('click', function() {
-        const disabled = inputs[0].disabled; // chequea el primer input
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editarPerfilModalLabel">
+            <i class="fas fa-user-edit"></i> Editar Perfil
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-        if (disabled) {
-            // Activar edición
-            inputs.forEach(i => i.disabled = false);
-            inputFoto.disabled = false;
-            btnGuardar.style.display = 'inline-block';
-            btnEditar.textContent = 'Cancelar edición';
-        } else {
-            // Desactivar edición sin guardar
-            inputs.forEach(i => i.disabled = true);
-            inputFoto.disabled = true;
-            btnGuardar.style.display = 'none';
-            btnEditar.textContent = 'Editar perfil';
-            // Resetear valores a originales si quieres
-            form.reset();
-            // Reset foto a original si cambió
-            fotoPerfil.src = '{{ asset("vendor/adminlte/dist/img/usuario.png") }}';
-        }
-    });
+        <div class="modal-body">
+          <div class="form-group">
+              <label><i class="fas fa-user"></i> Nombre completo</label>
+              <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-control">
+          </div>
 
-    // Mostrar preview imagen seleccionada
-    inputFoto.addEventListener('change', function(e){
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                fotoPerfil.src = evt.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+          <div class="form-group">
+              <label><i class="fas fa-id-card"></i> Cédula</label>
+              <input type="text" name="document" value="{{ old('document', $user->document) }}" class="form-control">
+          </div>
 
-    // Ocultar mensaje de éxito después de 3 seg
-    const successMsg = document.getElementById('success-msg');
-    if(successMsg){
-        setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
-    }
-</script>
+          <div class="form-group">
+              <label><i class="fas fa-phone"></i> Teléfono</label>
+              <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
+          </div>
+
+          <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+              <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control">
+          </div>
+
+          <div class="form-group">
+              <label><i class="fas fa-camera"></i> Foto de perfil</label>
+              <input type="file" name="avatar" class="form-control">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cerrar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar cambios
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
 
 @stop

@@ -102,9 +102,9 @@
     </div>
 
     <!-- Teclado y Mouse -->
-    <div class="input-serial d-none col-md-3">
-        <label>Serial</label>
-        <input type="text" name="serial_simple" class="form-control" value="{{ old('serial') }}">
+    <div class="input-simple d-none col-md-3">
+        <label>Marca</label>
+        <input type="text" name="marca_simple" class="form-control" value="{{ old('marca_simple') }}">
     </div>
   </div>
 
@@ -119,14 +119,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const t = tipo.value;
         document.querySelectorAll('.cpu-fields').forEach(e => e.classList.add('d-none'));
         document.querySelectorAll('.monitor-fields').forEach(e => e.classList.add('d-none'));
-        document.querySelectorAll('.input-serial').forEach(e => e.classList.add('d-none'));
+        document.querySelectorAll('.input-simple').forEach(e => e.classList.add('d-none'));
 
         if(t==='CPU') document.querySelectorAll('.cpu-fields').forEach(e => e.classList.remove('d-none'));
         if(t==='Monitor') document.querySelectorAll('.monitor-fields').forEach(e => e.classList.remove('d-none'));
-        if(t==='Teclado' || t==='Mouse') document.querySelectorAll('.input-serial').forEach(e => e.classList.remove('d-none'));
+        if(t==='Teclado' || t==='Mouse') document.querySelectorAll('.input-simple').forEach(e => e.classList.remove('d-none'));
     }
     tipo.addEventListener('change', toggleFields);
     toggleFields();
 });
+
 </script>
 @endsection

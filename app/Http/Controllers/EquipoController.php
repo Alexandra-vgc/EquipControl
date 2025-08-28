@@ -68,7 +68,8 @@ class EquipoController extends Controller
 
             case 'Teclado':
             case 'Mouse':
-                $data['serial'] = $request->serial_simple;
+                $data['marca'] = $request->marca_simple; 
+                $data['serial'] = null; 
                 break;
         }
 
@@ -98,22 +99,22 @@ class EquipoController extends Controller
     public function update(Request $request, $id)
     {
         $equipo = Equipo::findOrFail($id);
-
         $request->validate([
             'tipo' => 'required|in:CPU,Monitor,Teclado,Mouse',
             'estado' => 'required|in:Disponible,Asignado,En Reparación,Dañado',
+    // Campos dinámicos según tipo
             'tipo_cpu'        => 'nullable|in:Desktop,Laptop',
             'marca'           => 'nullable|string|max:100',
             'modelo'          => 'nullable|string|max:100',
-            'serial'          => 'nullable|string|max:100|unique:equipos,serial,' . $id,
+            'serial'          => 'nullable|string|max:100|unique:equipos,serial,' . ($id ?? 'NULL'),
             'mainboard_marca' => 'nullable|string|max:100',
             'mainboard_modelo'=> 'nullable|string|max:100',
             'procesador'      => 'nullable|string|max:100',
             'memoria_ram'     => 'nullable|integer',
             'capacidad_disco' => 'nullable|string|max:50',
             'energia'         => 'nullable|string|max:50',
+            'marca_simple'    => 'nullable|string|max:100', // para Teclado/Mouse
         ]);
-
         $data = [
             'tipo' => $request->tipo,
             'estado' => $request->estado,

@@ -10,6 +10,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\Admin\DevolucionController;
 use App\Http\Controllers\HistorialController;
+use App\Http\Controllers\ProfileController; // 👈 AÑADIDO
 
 /*
 |--------------------------------------------------------------------------
@@ -61,12 +62,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 });
 
-// Perfil de usuario
+// Perfil de usuario (viejo UsuarioController)
 Route::middleware(['auth'])->group(function () {
-    Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
-    Route::post('usuario/perfil', function (Illuminate\Http\Request $request) {
-        return redirect()->back()->with('success', 'Datos guardados');
-    })->name('usuario.perfil.guardar');
+    // Mostrar perfil
+    Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])
+        ->name('usuario.perfil');
+
+    // Actualizar perfil (PUT porque en el form pusiste @method('PUT'))
+    Route::put('usuario/perfil', [UsuarioController::class, 'actualizarPerfil'])
+        ->name('usuario.actualizarPerfil');
+});
+
+// 👇 NUEVO BLOQUE: Perfil con modal usando ProfileController
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/update-field', [ProfileController::class, 'updateField'])->name('profile.updateField');
 });
 
 // Rutas del admin
@@ -116,8 +126,6 @@ Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
 });
 
 // Ruta Historial
-
 Route::get('/historial', [HistorialController::class, 'index'])
     ->middleware(['auth','can:ver-historial'])
     ->name('historial.index');
-

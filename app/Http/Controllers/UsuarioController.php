@@ -4,32 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UsuarioController extends Controller
 {
     public function editarPerfil()
     {
-        $usuario = session('usuario');
-
-        // Si no tiene imagen, se pone una por defecto
-        $usuario['imagen'] = $usuario['imagen'] ?? 'usuario.png';
-
-        return view('usuario.perfil', compact('usuario'));
+        $user = Auth::user();
+        return view('usuario.perfil', compact('user'));
     }
 
+    public function actualizarPerfil(Request $request)
+    {
+        $user = Auth::user();
 
-    public function asignar() {
-    $usuarios = User::all();
-    $roles = Role::all();
-    return view('usuario.asignar', compact('usuarios', 'roles'));
-}
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'document' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-public function asignarRol(Request $request) {
-    $user = User::findOrFail($request->user_id);
-    $user->assignRole($request->rol);
-    return redirect()->back()->with('success', 'Rol asignado correctamente');
-}
+        $user->name = $request->name;
+        $user->document = $request->document;
+        $user->phone = $request->phone;
 
+        // ✅ Guardar nueva foto si viene
+        if ($request->hasFile('avatar')) {
+            // borrar la foto anterior (opcional)
+            if ($user->avatar && Storage::exists('public/'.$user->avatar)) {
+                Storage::delete('public/'.$user->avatar);
+            }
+
+            $path = $request->file('avatar')->store('usuarios', 'public');
+            $user->avatar = $path;
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Perfil actualizado correctamente ✅');
+    }
 }

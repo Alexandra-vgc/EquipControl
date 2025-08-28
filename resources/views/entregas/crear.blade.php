@@ -3,17 +3,17 @@
 @section('title', 'EquipControl - Crear Entrega')
 
 @section('content_header')
-    <div class="row">
-        <div class="col-sm-6">
-            <h1>
-                <i class="fas fa-file-alt"></i> {{-- Ícono de entrega --}}
+    <div class="row align-items-center">
+        <div class="col-sm-8">
+            <h1 class="mb-1">
+                <i class="fas fa-file-alt text-primary"></i>
                 Crear Entrega
             </h1>
             <p class="text-muted mb-0">
                 Registra la entrega de equipos de manera rápida y segura
             </p>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Inicio</a></li>
                 <li class="breadcrumb-item active">Entregas</li>
@@ -26,34 +26,40 @@
 <form action="{{ route('entregas.store') }}" method="POST">
     @csrf
 
-    <!-- Datos generales de la entrega -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-user"></i> Datos de la Entrega
-            </h3>
+    <!-- Datos generales -->
+    <div class="card shadow">
+    <div class="card-header bg-light">
+        <h3 class="card-title text-primary mb-0">
+            <i class="fas fa-user"></i> Datos del colaborador que recibe el equipo
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label><strong>Nombre</strong></label>
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label><strong>Correo</strong></label>
+                <input type="email" name="correo" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label><strong>Cargo</strong></label>
+                <input type="text" name="cargo" class="form-control">
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label><strong>Usuario</strong></label>
-                    <select name="user_id" class="form-control select2" required>
-                        @foreach($usuarios as $u)
-                            <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label><strong>Fecha</strong></label>
-                    <input type="date" name="fecha_entrega" class="form-control" required>
-                </div>
-                <div class="col-md-5">
-                    <label><strong>Observaciones</strong></label>
-                    <input type="text" name="observaciones" class="form-control">
-                </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label><strong>Área</strong></label>
+                <input type="text" name="area" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label><strong>Sede</strong></label>
+                <input type="text" name="sede" class="form-control">
             </div>
         </div>
     </div>
+</div>
 
     @php
         $categorias = [
@@ -64,115 +70,107 @@
         ];
     @endphp
 
-    <!-- Listado de equipos por categoría -->
+    <!-- Equipos disponibles -->
     @foreach($categorias as $nombre => $items)
     <div class="card shadow mb-4">
-        <div class="card-header bg-primary text-white"> {{-- CAMBIO: azul en lugar de bg-dark --}}
+        <div class="card-header bg-primary text-white">
             <h4 class="card-title mb-0">
                 <i class="fas 
                     {{ $nombre === 'CPU' ? 'fa-desktop' : 
                        ($nombre === 'Monitores' ? 'fa-tv' : 
                        ($nombre === 'Teclados' ? 'fa-keyboard' : 
-                       ($nombre === 'Mouse' ? 'fa-mouse' : 'fa-box'))) }} ">
+                       ($nombre === 'Mouse' ? 'fa-mouse' : 'fa-box'))) }}">
                 </i>
                 {{ $nombre }}
             </h4>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="thead-light"> {{-- más claro para resaltar con azul --}}
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="thead-light">
                         <tr>
-                            <th style="width: 50px;">Sel</th>
-                            <th>Código</th>
+                            <th>Sel</th>
                             <th>Marca</th>
                             <th>Modelo</th>
-                            <th>Serie</th>
-                            <th>Características</th>
+                            <th>Serial</th>
+                            @if($nombre === 'CPU')
+                                <th>Mainboard Marca</th>
+                                <th>Mainboard Modelo</th>
+                                <th>Procesador</th>
+                                <th>RAM</th>
+                                <th>Disco</th>
+                            @elseif($nombre === 'Monitores')
+                                <th>Energía</th>
+                            @endif
+                            <th>Estado</th> 
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($items as $i)
                         <tr>
-                            <td>
-                                <input type="checkbox" name="{{ strtolower($nombre) }}[]" value="{{ $i->id }}">
-                            </td>
-                            <td><strong>{{ $i->codigo }}</strong></td>
+                            <td><input type="checkbox" name="{{ strtolower($nombre) }}[]" value="{{ $i->id }}"></td>
                             <td>{{ $i->marca }}</td>
                             <td>{{ $i->modelo }}</td>
-                            <td><code>{{ $i->serie }}</code></td>
+                            <td><code>{{ $i->serial }}</code></td>
+
+                            @if($nombre === 'CPU')
+                                <td>{{ $i->mainboard_marca }}</td>
+                                <td>{{ $i->mainboard_modelo }}</td>
+                                <td>{{ $i->procesador }}</td>
+                                <td>{{ $i->memoria_ram }} GB</td>
+                                <td>{{ $i->capacidad_disco }}</td>
+                            @elseif($nombre === 'Monitores')
+                                <td>{{ $i->energia ?? '—' }}</td>
+                            @endif
+
                             <td>
-                                @if($i->caracteristicas && $i->caracteristicas != 'NULL')
-                                    <span data-toggle="tooltip" title="{{ $i->caracteristicas }}">
-                                        {{ Str::limit($i->caracteristicas, 30) }}
-                                    </span>
-                                @else
-                                    <span class="text-muted">Sin especificar</span>
-                                @endif
+                                <span class="badge {{ $i->estado_badge_class }}">
+                                   {{ $i->estado_formatted }}
+                                </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted">
+                            <td colspan="10" class="text-center text-muted py-4">
                                 <i class="fas fa-inbox fa-2x mb-2"></i><br>
                                 No hay disponibles.
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
+
                 </table>
             </div>
         </div>
     </div>
     @endforeach
 
-    <button class="btn btn-success btn-lg"> {{-- CAMBIO: verde --}}
+    <button class="btn btn-success btn-lg shadow">
         <i class="fas fa-save"></i> Guardar y generar PDF
     </button>
 </form>
 @stop
 
 @section('css')
-    <style>
-        /* Igualamos estilo al Inventario */
-        .card-header {
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .table th {
-            font-weight: 600;
-        }
-
-        code {
-            background-color: #f8f9fa;
-            color: #e83e8c;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.875em;
-        }
-
-        input[type="checkbox"] {
-            width: 1.2rem;
-            height: 1.2rem;
-        }
-
-        /* Disminuir resolución */
-        body {
-            font-size: 0.9rem;
-        }
-        .card {
-            max-width: 95%;
-            margin: auto;
-        }
-        h1 {
-            font-size: 1.6rem;
-        }
-    </style>
+<style>
+    code {
+        background-color: #f8f9fa;
+        color: #e83e8c;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+    .table th { font-weight: 600; }
+    input[type="checkbox"] {
+        width: 1.2rem; height: 1.2rem;
+    }
+    body { font-size: 0.9rem; }
+</style>
 @stop
 
 @section('js')
 <script>
-    $(document).ready(function() {
+    $(function() {
         $('[data-toggle="tooltip"]').tooltip();
         $('.select2').select2({ width: '100%' });
     });
