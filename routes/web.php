@@ -130,3 +130,8 @@ Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
 Route::get('/historial', [HistorialController::class, 'index'])
     ->middleware(['auth','can:ver-historial'])
     ->name('historial.index');
+
+// Eliminar historial
+Route::delete('/historial/{id}', [HistorialController::class, 'destroy'])
+    ->middleware(['auth','can:ver-historial'])
+    ->name('historial.destroy');
