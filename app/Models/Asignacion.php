@@ -12,9 +12,15 @@ class Asignacion extends Model
     protected $table = 'asignaciones';
 
     protected $fillable = [
+        'nombre',
+        'correo',
+        'cargo',
+        'area',
+        'sede',
         'user_id',
         'fecha_entrega',
         'observaciones',
+        'pdf_path'
     ];
 
     public function usuario()
@@ -25,5 +31,10 @@ class Asignacion extends Model
     public function detalles()
     {
         return $this->hasMany(AsignacionDetalle::class, 'asignacion_id');
+    }
+
+    public function otrosDispositivos()
+    {
+        return $this->hasMany(OtrosDispositivo::class, 'asignacion_id');
     }
 }

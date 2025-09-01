@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Asignacion;
 use App\Models\AsignacionDetalle;
 use App\Models\Equipo;
+use App\Models\OtrosDispositivo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsignacionController extends Controller
@@ -62,7 +64,6 @@ class AsignacionController extends Controller
             return $asig;
         });
 
-        // Redirigir a la vista2
         return redirect()->route('asignaciones.vista2', $asignacion->id);
     }
 
@@ -76,47 +77,74 @@ class AsignacionController extends Controller
     public function guardarDetalles(Request $request)
     {
         $data = $request->validate([
-            'asignacion_id' => 'required|exists:asignacions,id',
-            'tarjeta_red'   => 'array',
-            'parlantes'     => 'array',
-            'tarjeta_video' => 'array',
-            'tarjeta_audio' => 'array',
-            'optico'        => 'array',
-            'sd'            => 'array',
-            'seguridad'     => 'nullable|string',
-            'telefono'      => 'nullable|string',
-            'serial'        => 'nullable|string',
-            'ip'            => 'nullable|string',
-            'otros'         => 'nullable|string',
+            'asignacion_id'        => 'required|exists:asignaciones,id',
+            'tarjeta_red'          => 'nullable|array',
+            'parlantes'            => 'nullable|array',
+            'tarjeta_video'        => 'nullable|array',
+            'tarjeta_audio'        => 'nullable|array',
+            'optico'               => 'nullable|array',
+            'sd'                   => 'nullable|array',
+            'telefono_serial'      => 'nullable|string',
+            'ip'                   => 'nullable|string',
+            'otros'                => 'nullable|string',
+            'otros_dispositivos'   => 'nullable|array',
+            'uso_equipo'           => 'nullable|array',
+            'verificacion_funcional'=> 'nullable|array',
+            'imagenes.*'           => 'nullable|image|max:5120',
         ]);
 
-        $detalle = AsignacionDetalle::where('asignacion_id', $data['asignacion_id'])->first();
-        if (!$detalle) {
-            $detalle = new AsignacionDetalle();
-            $detalle->asignacion_id = $data['asignacion_id'];
+        $detalles = AsignacionDetalle::where('asignacion_id', $data['asignacion_id'])->get();
+
+        foreach($detalles as $detalle){
+            $detalle->tarjeta_red   = is_array($data['tarjeta_red'] ?? null) ? implode(', ', $data['tarjeta_red']) : $data['tarjeta_red'] ?? null;
+            $detalle->parlantes     = is_array($data['parlantes'] ?? null) ? implode(', ', $data['parlantes']) : $data['parlantes'] ?? null;
+            $detalle->tarjeta_video = is_array($data['tarjeta_video'] ?? null) ? implode(', ', $data['tarjeta_video']) : $data['tarjeta_video'] ?? null;
+            $detalle->tarjeta_audio = is_array($data['tarjeta_audio'] ?? null) ? implode(', ', $data['tarjeta_audio']) : $data['tarjeta_audio'] ?? null;
+            $detalle->optico        = is_array($data['optico'] ?? null) ? implode(', ', $data['optico']) : $data['optico'] ?? null;
+            $detalle->sd            = is_array($data['sd'] ?? null) ? implode(', ', $data['sd']) : $data['sd'] ?? null;
+            $detalle->telefono_serial = $data['telefono_serial'] ?? null;
+            $detalle->ip            = $data['ip'] ?? null;
+            $detalle->otros         = $data['otros'] ?? null;
+            $detalle->uso_equipo    = is_array($data['uso_equipo'] ?? null) ? implode(', ', $data['uso_equipo']) : $data['uso_equipo'] ?? null;
+            $detalle->verificacion_funcional = is_array($data['verificacion_funcional'] ?? null) ? implode(', ', $data['verificacion_funcional']) : $data['verificacion_funcional'] ?? null;
+            $detalle->save();
         }
 
-        $detalle->tarjeta_red   = isset($data['tarjeta_red']) ? implode(',', $data['tarjeta_red']) : null;
-        $detalle->parlantes     = isset($data['parlantes']) ? implode(',', $data['parlantes']) : null;
-        $detalle->tarjeta_video = isset($data['tarjeta_video']) ? implode(',', $data['tarjeta_video']) : null;
-        $detalle->tarjeta_audio = isset($data['tarjeta_audio']) ? implode(',', $data['tarjeta_audio']) : null;
-        $detalle->optico        = isset($data['optico']) ? implode(',', $data['optico']) : null;
-        $detalle->sd            = isset($data['sd']) ? implode(',', $data['sd']) : null;
-        $detalle->seguridad     = $data['seguridad'] ?? null;
-        $detalle->telefono      = $data['telefono'] ?? null;
-        $detalle->serial        = $data['serial'] ?? null;
-        $detalle->ip            = $data['ip'] ?? null;
-        $detalle->otros         = $data['otros'] ?? null;
+        // Guardar otros dispositivos
+        if(isset($data['otros_dispositivos'])){
+            $asignacion = Asignacion::find($data['asignacion_id']);
+            foreach($data['otros_dispositivos'] as $od){
+                OtrosDispositivo::create([
+                    'tipo' => $od['tipo'] ?? null,
+                    'marca' => $od['marca'] ?? null,
+                    'modelo' => $od['modelo'] ?? null,
+                    'serial' => $od['serial'] ?? null,
+                    'observacion' => $od['observacion'] ?? null,
+                    'asignacion_id' => $data['asignacion_id']
+                ]);
+            }
+        }
 
-        $detalle->save();
+        // Guardar imágenes
+        if($request->hasFile('imagenes')){
+            $imagenes = [];
+            foreach($request->file('imagenes') as $img){
+                $path = $img->store('asignaciones', 'public');
+                $imagenes[] = $path;
+            }
+            foreach($detalles as $detalle){
+                $detalle->imagenes = json_encode($imagenes);
+                $detalle->save();
+            }
+        }
 
-        return redirect()->route('entregas.pdf', $detalle->asignacion_id);
+        return redirect()->route('entregas.pdf', $data['asignacion_id']);
     }
 
     // Generar PDF de la asignación
     public function pdf($id)
     {
-        $asignacion = Asignacion::with(['usuario', 'detalles.equipo'])->findOrFail($id);
+        $asignacion = Asignacion::with(['usuario', 'detalles.equipo', 'otrosDispositivos'])->findOrFail($id);
 
         $pdf = Pdf::loadView('entregas.pdf', compact('asignacion'))->setPaper('A4');
 

@@ -9,7 +9,7 @@
 @stop
 
 @section('content')
-<form action="{{ route('asignaciones.guardarDetalles') }}" method="POST">
+<form action="{{ route('asignaciones.guardarDetalles') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="asignacion_id" value="{{ $asignacion->id }}">
 
@@ -155,17 +155,91 @@
         </div>
     </div>
 
-    <!-- Botones -->
-    <div class="d-flex justify-content-between mt-4">
-        <!-- Botón Atrás (lleva a entregas.create) -->
+    <!-- Uso del Equipo -->
+    <div class="card shadow mb-3">
+        <div class="card-header bg-light">
+            <strong>Uso del Equipo</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Laboratorio</th>
+                        <th>Coordinación</th>
+                        <th>Biblioteca</th>
+                        <th>Administrativo</th>
+                        <th>Investigador</th>
+                        <th>Docente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Laboratorio"></td>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Coordinacion"></td>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Biblioteca"></td>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Administrativo"></td>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Investigador"></td>
+                        <td><input type="checkbox" name="uso_equipo[]" value="Docente"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Verificación Funcional -->
+    <div class="card shadow mb-3">
+        <div class="card-header bg-light">
+            <strong>Verificación Funcional</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Comprobar encendido y apagado correcto</th>
+                        <th>Funcionamiento de periféricos: mouse, teclado y parlantes</th>
+                        <th>Funcionamiento básico del Sistema operativo Windows o Linux</th>
+                        <th>Verificación de las particiones C: D: del disco duro</th>
+                        <th>Correcto funcionamiento de software instalado</th>
+                        <th>Correcto funcionamiento del monitor</th>
+                        <th>Correcta conexión con la red</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="EncendidoApagado"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="Perifericos"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="SO"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="Particiones"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="Software"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="Monitor"></td>
+                        <td><input type="checkbox" name="verificacion_funcional[]" value="Red"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Adjuntar imágenes al final -->
+    <div class="card shadow mb-3" style="max-width: 400px;">
+        <div class="card-header bg-light">
+            <strong>Adjuntar Imágenes</strong>
+        </div>
+        <div class="card-body">
+            <input type="file" name="imagenes[]" multiple accept="image/*" class="form-control">
+            <small class="text-muted">Puedes seleccionar varias imágenes</small>
+        </div>
+    </div>
+
+    <!-- Botones fuera del card -->
+    <div class="d-flex justify-content-between mt-3">
         <a href="{{ route('entregas.create') }}" class="btn btn-secondary btn-lg shadow">
             <i class="fas fa-arrow-left"></i> Atrás
         </a>
 
-        <!-- Botón Guardar -->
         <button type="submit" class="btn btn-success btn-lg shadow">
-            <i class="fas fa-save"></i> Guardar y Siguiente
+            <i class="fas fa-check"></i> Finalizar
         </button>
     </div>
+
 </form>
 @stop
