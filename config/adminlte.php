@@ -71,11 +71,7 @@ return [
     'password_email_url' => 'password/email',
 
     'menu' => [
-        [
-            'text' => 'Equipos Asignados',
-            'url'  => 'equipos/asignados',
-            'icon' => 'fas fa-laptop',
-        ],
+        
         
         ['header' => 'GESTIÓN DE EQUIPOS'],
         [
@@ -115,6 +111,7 @@ return [
             'icon' => 'fas fa-history',
             'can'  => 'ver-historial',
         ],
+
 
         
         [

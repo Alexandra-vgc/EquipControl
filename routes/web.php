@@ -10,6 +10,7 @@ use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\Admin\DevolucionController;
 use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,3 +136,12 @@ Route::get('/historial', [HistorialController::class, 'index'])
 Route::delete('/historial/{id}', [HistorialController::class, 'destroy'])
     ->middleware(['auth','can:ver-historial'])
     ->name('historial.destroy');
+
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+    ->name('admin.dashboard');
+
+// Mostrar la vista2 para completar detalles técnicos
+Route::get('/asignaciones/vista2/{asignacion}', [AsignacionController::class, 'vista2'])->name('asignaciones.vista2');
+
+// Guardar los detalles de la vista2
+Route::post('/asignaciones/vista2', [AsignacionController::class, 'guardarDetalles'])->name('asignaciones.guardarDetalles');

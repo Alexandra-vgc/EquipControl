@@ -28,38 +28,38 @@
 
     <!-- Datos generales -->
     <div class="card shadow">
-    <div class="card-header bg-light">
-        <h3 class="card-title text-primary mb-0">
-            <i class="fas fa-user"></i> Datos del colaborador que recibe el equipo
-        </h3>
-    </div>
-    <div class="card-body">
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label><strong>Nombre</strong></label>
-                <input type="text" name="nombre" class="form-control" required>
+        <div class="card-header bg-light">
+            <h3 class="card-title text-primary mb-0">
+                <i class="fas fa-user"></i> Datos del colaborador que recibe el equipo
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label><strong>Nombre</strong></label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label><strong>Correo</strong></label>
+                    <input type="email" name="correo" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label><strong>Cargo</strong></label>
+                    <input type="text" name="cargo" class="form-control">
+                </div>
             </div>
-            <div class="col-md-4">
-                <label><strong>Correo</strong></label>
-                <input type="email" name="correo" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-                <label><strong>Cargo</strong></label>
-                <input type="text" name="cargo" class="form-control">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label><strong>Área</strong></label>
+                    <input type="text" name="area" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <label><strong>Sede</strong></label>
+                    <input type="text" name="sede" class="form-control">
+                </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label><strong>Área</strong></label>
-                <input type="text" name="area" class="form-control">
-            </div>
-            <div class="col-md-4">
-                <label><strong>Sede</strong></label>
-                <input type="text" name="sede" class="form-control">
-            </div>
-        </div>
     </div>
-</div>
 
     @php
         $categorias = [
@@ -108,7 +108,7 @@
                     <tbody>
                         @forelse($items as $i)
                         <tr>
-                            <td><input type="checkbox" name="{{ strtolower($nombre) }}[]" value="{{ $i->id }}"></td>
+                            <td><input type="checkbox" name="equipos[]" value="{{ $i->id }}"></td>
                             <td>{{ $i->marca }}</td>
                             <td>{{ $i->modelo }}</td>
                             <td><code>{{ $i->serial }}</code></td>
@@ -146,7 +146,7 @@
     @endforeach
 
     <button class="btn btn-success btn-lg shadow">
-        <i class="fas fa-save"></i> Guardar y generar PDF
+        <i class="fas fa-save"></i> Guardar y Siguiente
     </button>
 </form>
 @stop
