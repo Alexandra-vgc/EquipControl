@@ -1,89 +1,167 @@
 @extends('adminlte::page')
+
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1 class="text-bold text-dark">Panel de Control - EquipControl </h1>
+    <h1 class="text-bold text-dark">Panel de Control - EquipControl</h1>
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-md-3">
-            <x-adminlte-small-box title="Equipos Asignados" text="38 en uso" icon="fas fa-laptop" theme="success" url="#" url-text="Ver equipos"/>
-        </div>
+    {{-- KPIs principales --}}
+    <div class="row text-center custom-small-boxes">
         <div class="col-md-3">
             <x-adminlte-small-box 
-    class="box-devoluciones" 
-    title="Devoluciones Pendientes" 
-    text="6 equipos" 
-    icon="fas fa-undo-alt" 
-    theme="warning" 
-    url="{{ route('admin.devoluciones.create') }}" 
-    url-text="Ver devoluciones"/>
-
+                title="Equipos Asignados" 
+                text="{{ $equiposAsignados }} en uso" 
+                icon="fas fa-laptop" 
+                theme="success" 
+                url="#" 
+                url-text="Ver equipos"
+                data-toggle="modal" data-target="#modalAsignados"
+                class="shadow-lg"/>
         </div>
+
         <div class="col-md-3">
-            <x-adminlte-small-box title="Documentos Generados" text="22 documentos" icon="fas fa-file-alt" theme="danger" url="#" url-text="Ver reportes"/>
+            <x-adminlte-small-box 
+                title="Equipos Disponibles" 
+                text="{{ $equiposDisponibles }} libres" 
+                icon="fas fa-box-open" 
+                theme="info" 
+                url="#" 
+                url-text="Ver inventario"
+                data-toggle="modal" data-target="#modalDisponibles"
+                class="shadow-lg"/>
+        </div>
+
+        <div class="col-md-3">
+            <x-adminlte-small-box 
+                title="En Reparación" 
+                text="{{ $equiposReparacion }} equipos" 
+                icon="fas fa-tools" 
+                theme="danger" 
+                url="#" 
+                url-text="Ver detalles"
+                data-toggle="modal" data-target="#modalReparacion"
+                class="shadow-lg"/>
+        </div>
+
+        <div class="col-md-3">
+            <x-adminlte-small-box 
+                title="Equipos Dañados" 
+                text="{{ $equiposDanados }} equipos" 
+                icon="fas fa-exclamation-triangle" 
+                theme="dark" 
+                url="#" 
+                url-text="Ver detalles"
+                data-toggle="modal" data-target="#modalDanados"
+                class="shadow-lg"/>
         </div>
     </div>
 
-    <div class="row">
+    {{-- 📌 MODALES DE LISTAS --}}
+    {{-- Asignados --}}
+    <x-adminlte-modal id="modalAsignados" title="Equipos Asignados" theme="success" icon="fas fa-laptop">
+        @if($equiposAsignadosLista->isEmpty())
+            <p>No hay equipos asignados actualmente.</p>
+        @else
+            <ul class="list-group">
+                @foreach($equiposAsignadosLista as $eq)
+                    <li class="list-group-item">
+                        {{ $eq->tipo }} - {{ $eq->marca }} ({{ $eq->modelo }})
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </x-adminlte-modal>
+
+    {{-- Disponibles --}}
+    <x-adminlte-modal id="modalDisponibles" title="Equipos Disponibles" theme="info" icon="fas fa-box-open">
+        @if($equiposDisponiblesLista->isEmpty())
+            <p>No hay equipos disponibles actualmente.</p>
+        @else
+            <ul class="list-group">
+                @foreach($equiposDisponiblesLista as $eq)
+                    <li class="list-group-item">
+                        {{ $eq->tipo }} - {{ $eq->marca }} ({{ $eq->modelo }})
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </x-adminlte-modal>
+
+    {{-- Reparación --}}
+    <x-adminlte-modal id="modalReparacion" title="Equipos en Reparación" theme="danger" icon="fas fa-tools">
+        @if($equiposReparacionLista->isEmpty())
+            <p>No hay equipos en reparación actualmente.</p>
+        @else
+            <ul class="list-group">
+                @foreach($equiposReparacionLista as $eq)
+                    <li class="list-group-item">
+                        {{ $eq->tipo }} - {{ $eq->marca }} ({{ $eq->modelo }})
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </x-adminlte-modal>
+
+    {{-- Dañados --}}
+    <x-adminlte-modal id="modalDanados" title="Equipos Dañados" theme="dark" icon="fas fa-exclamation-triangle">
+        @if($equiposDanadosLista->isEmpty())
+            <p>No hay equipos dañados actualmente.</p>
+        @else
+            <ul class="list-group">
+                @foreach($equiposDanadosLista as $eq)
+                    <li class="list-group-item">
+                        {{ $eq->tipo }} - {{ $eq->marca }} ({{ $eq->modelo }})
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </x-adminlte-modal>
+
+    {{-- Listas rápidas --}}
+    <div class="row mt-4">
         <div class="col-md-6">
             <x-adminlte-card title="Últimas Entregas" theme="info" icon="fas fa-share-square">
-                <ul class="list-group">
-                    <li class="list-group-item">Equipo HP asignado a Noelia - 07/07/2025</li>
-                    <li class="list-group-item">Laptop Lenovo a Colton - 07/07/2025</li>
-                    <li class="list-group-item">Monitor Samsung a Gregory - 06/07/2025</li>
+                <ul class="list-group small">
+                    @forelse ($ultimasEntregas as $entrega)
+                        <li class="list-group-item">
+                            {{ $entrega->tipo }} - {{ $entrega->marca }} ({{ $entrega->modelo }}) - 
+                            {{ $entrega->updated_at->format('d/m/Y') }}
+                        </li>
+                    @empty
+                        <li class="list-group-item">No hay entregas recientes</li>
+                    @endforelse
                 </ul>
             </x-adminlte-card>
         </div>
 
         <div class="col-md-6">
             <x-adminlte-card title="Últimas Devoluciones" theme="lightblue" icon="fas fa-reply">
-                <ul class="list-group">
-                    <li class="list-group-item">Teclado Logitech devuelto por Enid - 06/07/2025</li>
-                    <li class="list-group-item">Mouse HP devuelto por Juan - 05/07/2025</li>
+                <ul class="list-group small">
+                    @forelse ($ultimasDevoluciones as $devolucion)
+                        <li class="list-group-item">
+                            {{ $devolucion->nombre ?? 'Equipo' }} devuelto - {{ $devolucion->updated_at->format('d/m/Y') }}
+                        </li>
+                    @empty
+                        <li class="list-group-item">No hay devoluciones recientes</li>
+                    @endforelse
                 </ul>
             </x-adminlte-card>
         </div>
     </div>
 
+    {{-- Gráficos --}}
     <div class="row mt-4">
-        <div class="col-12">
-            <x-adminlte-card title="Resumen General de Equipos" theme="warning" icon="fas fa-database">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Equipo</th>
-                            <th>Usuario</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>Laptop Dell</td>
-                            <td>Noelia O'Kon</td>
-                            <td><span class="badge bg-success">Entregado</span></td>
-                            <td>07/07/2025</td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>Monitor LG</td>
-                            <td>Gregory V.</td>
-                            <td><span class="badge bg-warning">Pendiente Devolución</span></td>
-                            <td>06/07/2025</td>
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>Teclado Logitech</td>
-                            <td>Enid von PhD</td>
-                            <td><span class="badge bg-danger">Devuelto</span></td>
-                            <td>05/07/2025</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="col-md-6">
+            <x-adminlte-card title="Estado General de los Equipos" theme="warning" icon="fas fa-chart-pie">
+                <canvas id="equiposChart" height="100"></canvas>
+            </x-adminlte-card>
+        </div>
+
+        <div class="col-md-6">
+            <x-adminlte-card title="Equipos por Tipo" theme="primary" icon="fas fa-server">
+                <canvas id="tipoChart" height="100"></canvas>
             </x-adminlte-card>
         </div>
     </div>
@@ -91,90 +169,67 @@
 
 @section('css')
     <style>
-        /* Fondo general */
-        body {
-            background-color: #467B79 !important;
+        /* 🎨 Personalización de los cuadros principales */
+        .custom-small-boxes .small-box {
+            border-radius: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Título principal */
-        h1 {
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* Estilo general para las tarjetas */
-        .small-box {
-            position: relative;
-            padding: 15px;
-            min-height: 120px;
-            background: linear-gradient(135deg, #467B79, #3e6f6d);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            overflow: hidden;
-        }
-
-        .small-box .inner h3,
-        .small-box .inner p,
-        .small-box-footer {
-            color: #ffffff !important;
-            z-index: 2;
-            position: relative;
-            font-size: 16px;
-        }
-
-        .small-box .icon {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 60px;
-            color: rgba(255, 255, 255, 0.08);
-            z-index: 1;
-        }
-
-        .small-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Texto blanco específico solo para Devoluciones Pendientes */
-        .box-devoluciones .inner h3,
-        .box-devoluciones .inner p,
-        .box-devoluciones .small-box-footer {
-            color: #ffffff !important;
-        }
-
-        /* (Opcional) Estilos para futuras tarjetas o tablas */
-        .card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            background-color: #467B79;
-            color: #ffffff;
+        .custom-small-boxes .small-box .inner h3 {
+            font-size: 1.5rem; /* número más pequeño */
             font-weight: bold;
         }
 
-        table.table {
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
+        .custom-small-boxes .small-box .inner p {
+            font-size: 0.9rem; /* texto más pequeño */
+            font-weight: 500;
         }
 
-        table.table thead {
-            background-color: #3e6f6d;
-            color: white;
+        .custom-small-boxes .small-box .icon {
+            opacity: 0.8;
         }
 
-        table.table tbody tr:hover {
-            background-color: #f2f2f2;
+        .custom-small-boxes .small-box-footer {
+            font-size: 0.8rem;
+        }
+
+        /* 🌟 Efecto hover bonito */
+        .custom-small-boxes .small-box:hover {
+            transform: scale(1.05);
+            transition: 0.3s ease-in-out;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
         }
     </style>
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the laravel-AdminLTE package!");</script>
-@stop 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Doughnut estado general
+        new Chart(document.getElementById('equiposChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Asignados', 'Disponibles', 'En Reparación', 'Dañados'],
+                datasets: [{
+                    data: [{{ $equiposAsignados }}, {{ $equiposDisponibles }}, {{ $equiposReparacion }}, {{ $equiposDanados }}],
+                    backgroundColor: ['#28a745', '#17a2b8', '#dc3545', '#343a40'],
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Barras por tipo de equipo
+        new Chart(document.getElementById('tipoChart'), {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode(array_keys($equiposTipo)) !!},
+                datasets: [{
+                    label: 'Cantidad',
+                    data: {!! json_encode(array_values($equiposTipo)) !!},
+                    backgroundColor: '#007bff'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    </script>
+@stop

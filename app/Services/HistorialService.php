@@ -22,7 +22,7 @@ class HistorialService
                 'metadata'      => $data['metadata'] ?? null,
             ];
 
-            // evitar duplicados rápidos (3s)
+            // evitar duplicados rápidos (3 segundos)
             $recent = Historial::where('equipo_id', $payload['equipo_id'])
                 ->where('accion', $payload['accion'])
                 ->where('usuario_id', $payload['usuario_id'])

@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role; // 👈 IMPORTANTE para usar roles
 
 class UsuarioController extends Controller
 {
+    // ---------- PERFIL ----------
     public function editarPerfil()
     {
         $user = Auth::user();
@@ -44,5 +46,30 @@ class UsuarioController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Perfil actualizado correctamente ✅');
+    }
+
+    // ---------- ASIGNAR ROLES (solo admin) ----------
+    public function asignar()
+    {
+        $usuarios = User::all();
+        $roles = Role::whereIn('name', ['admin', 'editor', 'lector'])->get();
+
+       return view('usuario.asignar', compact('usuarios', 'roles'));
+
+    }
+
+    public function asignarRol(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|exists:roles,name',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        // Quita roles anteriores y asigna el nuevo
+        $user->syncRoles([$request->role]);
+
+        return redirect()->back()->with('success', 'Rol asignado correctamente ✅');
     }
 }

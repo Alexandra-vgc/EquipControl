@@ -29,13 +29,11 @@ class Historial extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relación con el modelo Equipo
     public function equipo()
     {
         return $this->belongsTo(Equipo::class);
     }
 
-    // Relación con el modelo User
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');

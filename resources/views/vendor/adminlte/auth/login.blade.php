@@ -23,6 +23,14 @@
 @section('auth_header', __('adminlte::adminlte.login_message'))
 
 @section('auth_body')
+
+  {{-- Mensaje de éxito o estado --}}
+    @if (session('status'))
+        <div class="alert alert-success text-center">
+            {{ session('status') }}
+        </div>
+    @endif
+
     <form action="{{ $loginUrl }}" method="post">
         @csrf
 

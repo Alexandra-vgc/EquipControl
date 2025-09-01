@@ -70,74 +70,123 @@ return [
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Menú lateral
+    |--------------------------------------------------------------------------
+    */
     'menu' => [
+
+        // 🔹 SOLO ADMIN
+        ['header' => 'GESTIÓN DE EQUIPOS', 'can' => 'admin'],
+
         [
-            'text' => 'Equipos Asignados',
-            'url'  => 'equipos/asignados',
-            'icon' => 'fas fa-laptop',
-        ],
-        
-        ['header' => 'GESTIÓN DE EQUIPOS'],
-        [
-        'text'    => 'Equipos',
-        'icon'    => 'fas fa-desktop',
-        'submenu' => [
-            [
-                'text' => 'Inventario de Equipos',
-                'url'  => 'equipos/inventario',
-                'icon' => 'fas fa-boxes',
+            'text'    => 'Equipos',
+            'icon'    => 'fas fa-desktop',
+            'can'     => 'admin',
+            'submenu' => [
+                [
+                    'text' => 'Inventario de Equipos',
+                    'url'  => 'equipos/inventario',
+                    'icon' => 'fas fa-boxes',
+                    'can'  => 'admin',
+                ],
             ],
-    ],
-],
+        ],
 
         [
             'text'  => 'Nuevo Equipo',
             'route' => 'equipos.create',
-            'icon'  => 'fas fa-plus-circle', 
+            'icon'  => 'fas fa-plus-circle',
+            'can'   => 'admin',
         ],
 
         [
-            'text' => 'Nueva Entrega',
+            'text'  => 'Nueva Entrega',
             'route' => 'entregas.create',
             'icon'  => 'fas fa-file-signature',
+            'can'   => 'admin',
         ],
 
         [
-            'text' => 'Devoluciones',
-            'route'  => 'admin.devoluciones.create',
-            'icon' => 'fas fa-undo',
+            'text'  => 'Devoluciones',
+            'route' => 'admin.devoluciones.create',
+            'icon'  => 'fas fa-undo',
+            'can'   => 'admin',
         ],
-
 
         [
             'text' => 'Historial',
             'url'  => 'historial',
             'icon' => 'fas fa-history',
-            'can'  => 'ver-historial',
+            'can' => 'admin',
         ],
 
-        
         [
             'text' => 'Usuarios',
             'icon' => 'fas fa-users',
+            'can'  => 'admin',
             'submenu' => [
-        [
-            'text' => 'Asignar Rol',
-          'route'  => 'admin.usuario.asignar', 
-            'icon' => 'fas fa-user-tag',
+                [
+                    'text'  => 'Asignar Rol',
+                    'route' => 'admin.usuario.asignar',
+                    'icon'  => 'fas fa-user-tag',
+                    'can'   => 'admin',
+                ],
+            ],
         ],
-    ],
-],
 
+        // 🔹 SOLO EDITOR (similar a admin pero sin Usuarios)
+        ['header' => 'GESTIÓN (EDITOR)', 'can' => 'editor'],
+
+        [
+            'text'    => 'Equipos',
+            'icon'    => 'fas fa-desktop',
+            'can'     => 'editor',
+            'submenu' => [
+                [
+                    'text' => 'Inventario de Equipos',
+                    'url'  => 'equipos/inventario',
+                    'icon' => 'fas fa-boxes',
+                    'can'  => 'editor',
+                ],
+            ],
+        ],
+
+        [
+            'text'  => 'Nuevo Equipo',
+            'route' => 'equipos.create',
+            'icon'  => 'fas fa-plus-circle',
+            'can'   => 'editor',
+        ],
+
+        [
+            'text'  => 'Nueva Entrega',
+            'route' => 'entregas.create',
+            'icon'  => 'fas fa-file-signature',
+            'can'   => 'editor',
+        ],
+
+        [
+            'text'  => 'Devoluciones',
+            'route' => 'admin.devoluciones.create',
+            'icon'  => 'fas fa-undo',
+            'can'   => 'editor',
+        ],
+
+        [
+            'text' => 'Historial',
+            'url'  => 'historial',
+            'icon' => 'fas fa-history',
+            'can' => 'editor',
+        ],
+
+        // 🔹 COMUNES (TODOS: admin, editor y lector)
         [
             'text'  => 'Contacto',
             'route' => 'contact.index',
             'icon'  => 'fas fa-envelope',
         ],
-
-
-
-        
 
         ['header' => 'CUENTA'],
         [
@@ -146,13 +195,18 @@ return [
             'icon' => 'fas fa-user',
         ],
         [
-            'text' => 'Cerrar sesión',
-            'url'  => 'logout',
-            'icon' => 'fas fa-sign-out-alt',
+            'text'   => 'Cerrar sesión',
+            'url'    => 'logout',
+            'icon'   => 'fas fa-sign-out-alt',
             'method' => 'POST',
         ],
-        ],
+    ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Filtros del menú
+    |--------------------------------------------------------------------------
+    */
     'filters' => [
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
@@ -163,8 +217,11 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
     ],
 
-    
-
+    /*
+    |--------------------------------------------------------------------------
+    | Plugins
+    |--------------------------------------------------------------------------
+    */
     'plugins' => [
         'Chartjs' => [
             'active' => true,

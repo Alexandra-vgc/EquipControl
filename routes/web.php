@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ContactController;
@@ -10,7 +9,8 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\Admin\DevolucionController;
 use App\Http\Controllers\HistorialController;
-use App\Http\Controllers\ProfileController; // 👈 AÑADIDO
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +43,17 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 // Dashboards por rol
-Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', [AdminController::class,'dashboard'])->name('admin.dashboard');
-Route::middleware(['auth', 'role:editor'])->get('/editor/dashboard', function(){ return view('editor.dashboard'); })->name('editor.dashboard');
-Route::middleware(['auth', 'role:lector'])->get('/lector/dashboard', function(){ return view('lector.dashboard'); })->name('lector.dashboard');
+Route::middleware(['auth', 'role:admin'])
+    ->get('/admin/dashboard', [AdminController::class,'dashboard'])
+    ->name('admin.dashboard');
+
+Route::middleware(['auth', 'role:editor'])
+    ->get('/editor/dashboard', function(){ return view('editor.dashboard'); })
+    ->name('editor.dashboard');
+
+Route::middleware(['auth', 'role:lector'])
+    ->get('/lector/dashboard', function(){ return view('lector.dashboard'); })
+    ->name('lector.dashboard');
 
 // Rutas de contenido con permisos
 Route::middleware(['auth'])->group(function () {
@@ -64,13 +72,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Perfil de usuario (viejo UsuarioController)
 Route::middleware(['auth'])->group(function () {
-    // Mostrar perfil
-    Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])
-        ->name('usuario.perfil');
-
-    // Actualizar perfil (PUT porque en el form pusiste @method('PUT'))
-    Route::put('usuario/perfil', [UsuarioController::class, 'actualizarPerfil'])
-        ->name('usuario.actualizarPerfil');
+    Route::get('usuario/perfil', [UsuarioController::class, 'editarPerfil'])->name('usuario.perfil');
+    Route::put('usuario/perfil', [UsuarioController::class, 'actualizarPerfil'])->name('usuario.actualizarPerfil');
 });
 
 // 👇 NUEVO BLOQUE: Perfil con modal usando ProfileController
@@ -84,7 +87,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // Usuarios
+    // 👉 Rutas para asignar roles
     Route::get('/usuario/asignar', [UsuarioController::class, 'asignar'])->name('usuario.asignar');
     Route::post('/usuario/asignar', [UsuarioController::class, 'asignarRol'])->name('usuario.asignar.store');
 
@@ -108,7 +111,6 @@ Route::prefix('equipos')->name('equipos.')->group(function () {
     Route::get('/crear', [EquipoController::class, 'create'])->name('create');
     Route::post('/', [EquipoController::class, 'store'])->name('store');
 
-    // Rutas para ver y editar equipos
     Route::get('/{equipo}', [EquipoController::class, 'show'])->name('show');
     Route::get('/{equipo}/editar', [EquipoController::class, 'edit'])->name('edit');
     Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');
@@ -129,3 +131,17 @@ Route::middleware(['auth','role:admin|admin1|admin2'])->group(function () {
 Route::get('/historial', [HistorialController::class, 'index'])
     ->middleware(['auth','can:ver-historial'])
     ->name('historial.index');
+
+// Eliminar historial
+Route::delete('/historial/{id}', [HistorialController::class, 'destroy'])
+    ->middleware(['auth','can:ver-historial'])
+    ->name('historial.destroy');
+
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+    ->name('admin.dashboard');
+
+// Mostrar la vista2 para completar detalles técnicos
+Route::get('/asignaciones/vista2/{asignacion}', [AsignacionController::class, 'vista2'])->name('asignaciones.vista2');
+
+// Guardar los detalles de la vista2
+Route::post('/asignaciones/vista2', [AsignacionController::class, 'guardarDetalles'])->name('asignaciones.guardarDetalles');

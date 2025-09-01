@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UsuarioController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Mostrar perfil del usuario autenticado
