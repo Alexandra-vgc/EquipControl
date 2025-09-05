@@ -72,116 +72,116 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Menú lateral
+    | Menú lateral - CORREGIDO PARA ROLES
     |--------------------------------------------------------------------------
     */
     'menu' => [
 
-        // 🔹 SOLO ADMIN
-        ['header' => 'GESTIÓN DE EQUIPOS', 'can' => 'admin'],
+        // ===========================
+        // MENÚ PARA ADMINISTRADORES
+        // ===========================
+        ['header' => 'GESTIÓN DE EQUIPOS', 'can' => ['admin']],
 
         [
             'text'    => 'Equipos',
             'icon'    => 'fas fa-desktop',
-            'can'     => 'admin',
+            'can'     => ['admin'],
             'submenu' => [
                 [
-                    'text' => 'Inventario de Equipos',
-                    'url'  => 'equipos/inventario',
+                    'text' => 'Ver Inventario',
+                    'route' => 'equipos.inventario',
                     'icon' => 'fas fa-boxes',
-                    'can'  => 'admin',
+                    'can'  => ['admin'],
+                ],
+                [
+                    'text' => 'Crear Nuevo Equipo',
+                    'route' => 'equipos.create',
+                    'icon' => 'fas fa-plus-circle',
+                    'can'  => ['admin'],
                 ],
             ],
-        ],
-
-        [
-            'text'  => 'Nuevo Equipo',
-            'route' => 'equipos.create',
-            'icon'  => 'fas fa-plus-circle',
-            'can'   => 'admin',
         ],
 
         [
             'text'  => 'Nueva Entrega',
             'route' => 'entregas.create',
             'icon'  => 'fas fa-file-signature',
-            'can'   => 'admin',
+            'can'   => ['admin'],
         ],
 
         [
             'text'  => 'Devoluciones',
             'route' => 'admin.devoluciones.create',
             'icon'  => 'fas fa-undo',
-            'can'   => 'admin',
+            'can'   => ['admin'],
         ],
 
         [
-            'text' => 'Historial',
-            'url'  => 'historial',
-            'icon' => 'fas fa-history',
-            'can' => 'admin',
+            'text'  => 'Historial',
+            'route' => 'historial.index',
+            'icon'  => 'fas fa-history',
+            'can'   => ['admin'],
         ],
 
         [
             'text' => 'Usuarios',
             'icon' => 'fas fa-users',
-            'can'  => 'admin',
+            'can'  => ['admin'],
             'submenu' => [
                 [
-                    'text'  => 'Asignar Rol',
+                    'text'  => 'Asignar Roles',
                     'route' => 'admin.usuario.asignar',
                     'icon'  => 'fas fa-user-tag',
-                    'can'   => 'admin',
+                    'can'   => ['admin'],
                 ],
             ],
         ],
 
-        // 🔹 SOLO EDITOR (similar a admin pero sin Usuarios)
-        ['header' => 'GESTIÓN (EDITOR)', 'can' => 'editor'],
+        // ===========================
+        // MENÚ PARA EDITORES
+        // ===========================
+        ['header' => 'OPERACIONES (EDITOR)', 'can' => ['editor']],
 
         [
-            'text'    => 'Equipos',
-            'icon'    => 'fas fa-desktop',
-            'can'     => 'editor',
-            'submenu' => [
-                [
-                    'text' => 'Inventario de Equipos',
-                    'url'  => 'equipos/inventario',
-                    'icon' => 'fas fa-boxes',
-                    'can'  => 'editor',
-                ],
-            ],
-        ],
-
-        [
-            'text'  => 'Nuevo Equipo',
-            'route' => 'equipos.create',
-            'icon'  => 'fas fa-plus-circle',
-            'can'   => 'editor',
+            'text'  => 'Ver Inventario',
+            'route' => 'equipos.inventario',
+            'icon'  => 'fas fa-boxes',
+            'can'   => ['editor'],
         ],
 
         [
             'text'  => 'Nueva Entrega',
-            'route' => 'entregas.create',
+            'route' => 'editor.entregas.create',
             'icon'  => 'fas fa-file-signature',
-            'can'   => 'editor',
+            'can'   => ['editor'],
         ],
 
         [
             'text'  => 'Devoluciones',
-            'route' => 'admin.devoluciones.create',
+            'route' => 'editor.devoluciones.create',
             'icon'  => 'fas fa-undo',
-            'can'   => 'editor',
+            'can'   => ['editor'],
         ],
 
         [
-            'text' => 'Historial',
-            'url'  => 'historial',
-            'icon' => 'fas fa-history',
-            'can' => 'editor',
+            'text'  => 'Generar Documentos',
+            'route' => 'editor.documentos.index',
+            'icon'  => 'fas fa-file-pdf',
+            'can'   => ['editor'],
         ],
 
-        // 🔹 COMUNES (TODOS: admin, editor y lector)
+        [
+            'text'  => 'Historial',
+            'route' => 'historial.index',
+            'icon'  => 'fas fa-history',
+            'can'   => ['editor'],
+        ],
+
+        // ===========================
+        // MENÚ COMPARTIDO (TODOS)
+        // ===========================
+        ['header' => 'GENERAL'],
+
         [
             'text'  => 'Contacto',
             'route' => 'contact.index',
@@ -189,16 +189,19 @@ return [
         ],
 
         ['header' => 'CUENTA'],
+        
         [
-            'text' => 'Perfil',
-            'url'  => 'usuario/perfil',
+            'text' => 'Mi Perfil',
+            'route' => 'usuario.perfil',
             'icon' => 'fas fa-user',
         ],
+        
         [
-            'text'   => 'Cerrar sesión',
+            'text'   => 'Cerrar Sesión',
             'url'    => 'logout',
             'icon'   => 'fas fa-sign-out-alt',
-            'method' => 'POST',
+            'method' => 'post',
+            
         ],
     ],
 
