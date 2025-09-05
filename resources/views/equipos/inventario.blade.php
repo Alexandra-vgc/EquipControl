@@ -21,9 +21,12 @@
         <div class="card-header">
             <h3 class="card-title"><i class="fas fa-laptop"></i> Lista de Equipos</h3>
             <div class="card-tools">
-                <a href="{{ route('equipos.create') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> Agregar Equipo
-                </a>
+                {{-- Solo admin puede agregar equipos --}}
+                @can('admin')
+                    <a href="{{ route('equipos.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Agregar Equipo
+                    </a>
+                @endcan
             </div>
         </div>
         
@@ -86,45 +89,56 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
+                                    {{-- TODOS pueden ver detalles --}}
                                     <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-info btn-sm" title="Ver detalles">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-warning btn-sm" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{ $equipo->id }}" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    
+                                    {{-- Solo ADMIN puede editar --}}
+                                    @can('admin')
+                                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-warning btn-sm" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    
+                                    {{-- Solo ADMIN puede eliminar --}}
+                                    @can('admin')
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{ $equipo->id }}" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @endcan
                                 </div>
 
-                                <!-- Modal eliminar -->
-                                <div class="modal fade" id="deleteModal{{ $equipo->id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title"><i class="fas fa-exclamation-triangle text-danger"></i> Confirmar Eliminación</h4>
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>¿Eliminar este equipo?</p>
-                                                <div class="alert alert-info">
-                                                    <strong>{{ $equipo->tipo }}</strong><br>
-                                                    <strong>Marca:</strong> {{ $equipo->marca }}<br>
-                                                    <strong>Modelo:</strong> {{ $equipo->modelo }}<br>
-                                                    <strong>Serial:</strong> {{ $equipo->serial }}
+                                {{-- Modal eliminar - solo para ADMIN --}}
+                                @can('admin')
+                                    <div class="modal fade" id="deleteModal{{ $equipo->id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title"><i class="fas fa-exclamation-triangle text-danger"></i> Confirmar Eliminación</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
+                                                <div class="modal-body">
+                                                    <p>¿Eliminar este equipo?</p>
+                                                    <div class="alert alert-info">
+                                                        <strong>{{ $equipo->tipo }}</strong><br>
+                                                        <strong>Marca:</strong> {{ $equipo->marca }}<br>
+                                                        <strong>Modelo:</strong> {{ $equipo->modelo }}<br>
+                                                        <strong>Serial:</strong> {{ $equipo->serial }}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                    <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endcan
 
                             </td>
                         </tr>
@@ -134,7 +148,10 @@
                                 <div class="p-4 text-muted">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <h5>No hay equipos registrados</h5>
-                                    <a href="{{ route('equipos.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Equipo</a>
+                                    {{-- Solo admin puede agregar equipos desde aquí también --}}
+                                    @can('admin')
+                                        <a href="{{ route('equipos.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Equipo</a>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

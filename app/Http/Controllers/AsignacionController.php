@@ -14,7 +14,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AsignacionController extends Controller
 {
-    // Mostrar formulario de creación
+    public function __construct()
+    {
+        // Verificar que el usuario tenga permiso para registrar entregas
+        $this->middleware(['auth', 'can:registrar-entregas']);
+    }
+
     public function create()
     {
         $usuarios  = User::orderBy('name')->get();
@@ -26,13 +31,12 @@ class AsignacionController extends Controller
         return view('entregas.crear', compact('usuarios', 'cpus', 'monitores', 'teclados', 'mouses'));
     }
 
-    // Guardar asignación y equipos seleccionados
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'       => 'required|string',
-            'correo'       => 'required|email',
-            'equipos'      => 'required|array|min:1',
+            'nombre'  => 'required|string',
+            'correo'  => 'required|email',
+            'equipos' => 'required|array|min:1',
         ], [
             'equipos.required' => 'Selecciona al menos un equipo.'
         ]);
@@ -41,10 +45,10 @@ class AsignacionController extends Controller
             $asig = Asignacion::create([
                 'nombre' => $request->nombre,
                 'correo' => $request->correo,
-                'cargo' => $request->cargo,
-                'area' => $request->area,
-                'sede' => $request->sede,
-                'user_id' => auth()->id(),
+                'cargo'  => $request->cargo,
+                'area'   => $request->area,
+                'sede'   => $request->sede,
+                'user_id'=> auth()->id(),
                 'fecha_entrega' => now(),
             ]);
 
@@ -67,35 +71,33 @@ class AsignacionController extends Controller
         return redirect()->route('asignaciones.vista2', $asignacion->id);
     }
 
-    // Mostrar la vista2 para completar detalles técnicos
     public function vista2(Asignacion $asignacion)
     {
         return view('entregas.vista2', compact('asignacion'));
     }
 
-    // Guardar los detalles técnicos de la vista2
     public function guardarDetalles(Request $request)
     {
         $data = $request->validate([
-            'asignacion_id'        => 'required|exists:asignaciones,id',
-            'tarjeta_red'          => 'nullable|array',
-            'parlantes'            => 'nullable|array',
-            'tarjeta_video'        => 'nullable|array',
-            'tarjeta_audio'        => 'nullable|array',
-            'optico'               => 'nullable|array',
-            'sd'                   => 'nullable|array',
-            'telefono_serial'      => 'nullable|string',
-            'ip'                   => 'nullable|string',
-            'otros'                => 'nullable|string',
-            'otros_dispositivos'   => 'nullable|array',
-            'uso_equipo'           => 'nullable|array',
-            'verificacion_funcional'=> 'nullable|array',
-            'imagenes.*'           => 'nullable|image|max:5120',
+            'asignacion_id' => 'required|exists:asignaciones,id',
+            'tarjeta_red'   => 'nullable|array',
+            'parlantes'     => 'nullable|array',
+            'tarjeta_video' => 'nullable|array',
+            'tarjeta_audio' => 'nullable|array',
+            'optico'        => 'nullable|array',
+            'sd'            => 'nullable|array',
+            'telefono_serial'=> 'nullable|string',
+            'ip'            => 'nullable|string',
+            'otros'         => 'nullable|string',
+            'otros_dispositivos' => 'nullable|array',
+            'uso_equipo'    => 'nullable|array',
+            'verificacion_funcional' => 'nullable|array',
+            'imagenes.*'    => 'nullable|image|max:5120',
         ]);
 
         $detalles = AsignacionDetalle::where('asignacion_id', $data['asignacion_id'])->get();
 
-        foreach($detalles as $detalle){
+        foreach ($detalles as $detalle) {
             $detalle->tarjeta_red   = is_array($data['tarjeta_red'] ?? null) ? implode(', ', $data['tarjeta_red']) : $data['tarjeta_red'] ?? null;
             $detalle->parlantes     = is_array($data['parlantes'] ?? null) ? implode(', ', $data['parlantes']) : $data['parlantes'] ?? null;
             $detalle->tarjeta_video = is_array($data['tarjeta_video'] ?? null) ? implode(', ', $data['tarjeta_video']) : $data['tarjeta_video'] ?? null;
@@ -110,11 +112,9 @@ class AsignacionController extends Controller
             $detalle->save();
         }
 
-        // Guardar otros dispositivos
-        if(isset($data['otros_dispositivos'])){
-            $asignacion = Asignacion::find($data['asignacion_id']);
-            foreach($data['otros_dispositivos'] as $od){
-                OtrosDispositivo::create([
+        if (isset($data['otros_dispositivos'])) {
+            foreach ($data['otros_dispositivos'] as $od) {
+                \App\Models\OtrosDispositivo::create([
                     'tipo' => $od['tipo'] ?? null,
                     'marca' => $od['marca'] ?? null,
                     'modelo' => $od['modelo'] ?? null,
@@ -125,23 +125,26 @@ class AsignacionController extends Controller
             }
         }
 
-        // Guardar imágenes
-        if($request->hasFile('imagenes')){
+        if ($request->hasFile('imagenes')) {
             $imagenes = [];
-            foreach($request->file('imagenes') as $img){
+            foreach ($request->file('imagenes') as $img) {
                 $path = $img->store('asignaciones', 'public');
                 $imagenes[] = $path;
             }
-            foreach($detalles as $detalle){
+            foreach ($detalles as $detalle) {
                 $detalle->imagenes = json_encode($imagenes);
                 $detalle->save();
             }
         }
 
+        // Redirigir según el rol del usuario
+        if (auth()->user()->hasRole('editor')) {
+            return redirect()->route('editor.entregas.pdf', $data['asignacion_id']);
+        }
+
         return redirect()->route('entregas.pdf', $data['asignacion_id']);
     }
 
-    // Generar PDF de la asignación
     public function pdf($id)
     {
         $asignacion = Asignacion::with(['usuario', 'detalles.equipo', 'otrosDispositivos'])->findOrFail($id);

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactMail;
+use Exception;
 
 class ContactController extends Controller
 {
@@ -20,21 +22,20 @@ class ContactController extends Controller
             'mensaje' => 'required|string',
         ]);
 
-        $data = [
-            'nombre' => $request->nombre,
-            'correo' => $request->correo,
-            'mensaje' => $request->mensaje,
-        ];
+        try {
+            // Usar ContactMail en lugar de Mail::send()
+            Mail::to(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'))
+                ->send(new ContactMail(
+                    $request->nombre,
+                    $request->correo, 
+                    $request->mensaje
+                ));
 
-        Mail::send('emails.contact', $data, function ($message) use ($data) {
-            // Forzamos que siempre haya un from válido
-            $message->from(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'), env('MAIL_FROM_NAME', 'EquipControl'));
-            $message->to(env('MAIL_FROM_ADDRESS', 'alexandraguaranda59@gmail.com'))
-                    ->subject('Nuevo mensaje de contacto')
-                    ->replyTo($data['correo'], $data['nombre']);
-        });
-
-        return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
+            return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
+            
+        } catch (Exception $e) {
+            \Log::error('Error enviando email de contacto: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al enviar el mensaje. Intenta nuevamente.');
+        }
     }
 }
-

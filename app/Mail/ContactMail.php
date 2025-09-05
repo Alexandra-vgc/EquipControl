@@ -10,21 +10,22 @@ class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name;
-    public $email;
-    public $content;
+    public $nombre;  // Cambiado para que coincida con tu vista
+    public $correo;  // Cambiado para que coincida con tu vista
+    public $mensaje; // Cambiado para que coincida con tu vista
 
-    public function __construct($name, $email, $content)
+    public function __construct($nombre, $correo, $mensaje)
     {
-        $this->name = $name;
-        $this->email = $email;
-        $this->content = $content;
+        $this->nombre = $nombre;
+        $this->correo = $correo;
+        $this->mensaje = $mensaje;
     }
 
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                     ->subject('Nuevo mensaje de contacto')
-                    ->markdown('emails.contact');
+                    ->replyTo($this->correo, $this->nombre)  // Para poder responder al remitente
+                    ->view('emails.contact');  // Cambiado de markdown() a view()
     }
 }

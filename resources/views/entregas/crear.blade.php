@@ -23,7 +23,8 @@
 @stop
 
 @section('content')
-<form action="{{ route('entregas.store') }}" method="POST">
+{{-- Formulario dinámico según el rol --}}
+<form action="{{ auth()->user()->hasRole('editor') ? route('editor.entregas.store') : route('entregas.store') }}" method="POST">
     @csrf
 
     <!-- Datos generales -->

@@ -1,85 +1,139 @@
 @extends('adminlte::page')
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Editor')
 
 @section('content_header')
-    <h1 class="text-bold text-dark">Panel de Control - EquipControl</h1>
+    <h1 class="text-bold text-dark">Panel de Control - EquipControl (Editor)</h1>
 @stop
 
 @section('content')
+    {{-- CUADRITOS PRINCIPALES --}}
     <div class="row">
+        {{-- Registrar nueva entrega --}}
         <div class="col-md-3">
-            <x-adminlte-small-box title="Solicitudes de Entrega" text="14 pendientes" icon="fas fa-clipboard-list" theme="info" url="#" url-text="Ver solicitudes"/>
+            <x-adminlte-small-box 
+                title="Solicitudes de Entrega" 
+                text="Registrar nueva entrega" 
+                icon="fas fa-clipboard-list" 
+                theme="info" 
+                url="{{ route('editor.entregas.create') }}" 
+                url-text="Registrar entrega"/>
         </div>
+
+        {{-- Ver inventario de equipos --}}
         <div class="col-md-3">
-            <x-adminlte-small-box title="Equipos Asignados" text="38 en uso" icon="fas fa-laptop" theme="success" url="#" url-text="Ver equipos"/>
+            <x-adminlte-small-box 
+                title="Equipos Asignados" 
+                text="Ver inventario" 
+                icon="fas fa-laptop" 
+                theme="success" 
+                url="{{ route('equipos.inventario') }}" 
+                url-text="Ver equipos"/>
         </div>
+
+        {{-- Registrar devolución --}}
         <div class="col-md-3">
-            <x-adminlte-small-box class="box-devoluciones" title="Devoluciones Pendientes" text="6 equipos" icon="fas fa-undo-alt" theme="warning" url="#" url-text="Ver devoluciones"/>
+            <x-adminlte-small-box 
+                class="box-devoluciones" 
+                title="Devoluciones" 
+                text="Registrar devolución" 
+                icon="fas fa-undo-alt" 
+                theme="warning" 
+                url="{{ route('editor.devoluciones.create') }}" 
+                url-text="Registrar devolución"/>
         </div>
+
+        {{-- Generar documentos --}}
         <div class="col-md-3">
-            <x-adminlte-small-box title="Documentos Generados" text="22 documentos" icon="fas fa-file-alt" theme="danger" url="#" url-text="Ver reportes"/>
+            <x-adminlte-small-box 
+                title="Documentos" 
+                text="Generar PDF" 
+                icon="fas fa-file-alt" 
+                theme="danger" 
+                url="{{ route('editor.documentos.index') }}" 
+                url-text="Generar documento"/>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <x-adminlte-card title="Últimas Entregas" theme="info" icon="fas fa-share-square">
-                <ul class="list-group">
-                    <li class="list-group-item">Equipo HP asignado a Noelia - 07/07/2025</li>
-                    <li class="list-group-item">Laptop Lenovo a Colton - 07/07/2025</li>
-                    <li class="list-group-item">Monitor Samsung a Gregory - 06/07/2025</li>
-                </ul>
-            </x-adminlte-card>
-        </div>
-
-        <div class="col-md-6">
-            <x-adminlte-card title="Últimas Devoluciones" theme="lightblue" icon="fas fa-reply">
-                <ul class="list-group">
-                    <li class="list-group-item">Teclado Logitech devuelto por Enid - 06/07/2025</li>
-                    <li class="list-group-item">Mouse HP devuelto por Juan - 05/07/2025</li>
-                </ul>
-            </x-adminlte-card>
-        </div>
-    </div>
-
+    {{-- SEGUNDA FILA CON FUNCIONES ADICIONALES --}}
     <div class="row mt-4">
-        <div class="col-12">
-            <x-adminlte-card title="Resumen General de Equipos" theme="warning" icon="fas fa-database">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Equipo</th>
-                            <th>Usuario</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>Laptop Dell</td>
-                            <td>Noelia O'Kon</td>
-                            <td><span class="badge bg-success">Entregado</span></td>
-                            <td>07/07/2025</td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>Monitor LG</td>
-                            <td>Gregory V.</td>
-                            <td><span class="badge bg-warning">Pendiente Devolución</span></td>
-                            <td>06/07/2025</td>
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>Teclado Logitech</td>
-                            <td>Enid von PhD</td>
-                            <td><span class="badge bg-danger">Devuelto</span></td>
-                            <td>05/07/2025</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </x-adminlte-card>
+        {{-- Ver historial --}}
+        <div class="col-md-6">
+            <x-adminlte-small-box 
+                title="Historial" 
+                text="Ver historial de movimientos" 
+                icon="fas fa-history" 
+                theme="primary" 
+                url="{{ route('historial.index') }}" 
+                url-text="Ver historial"/>
+        </div>
+
+        {{-- Contactos --}}
+        <div class="col-md-6">
+            <x-adminlte-small-box 
+                title="Contactos" 
+                text="Ver información de contacto" 
+                icon="fas fa-address-book" 
+                theme="info" 
+                url="{{ route('contact.index') }}" 
+                url-text="Ver contactos"/>
+        </div>
+    </div>
+
+    {{-- INFORMACIÓN DE PERMISOS DEL EDITOR --}}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-shield"></i> Permisos del Editor
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-success"><i class="fas fa-check"></i> Puedes hacer:</h5>
+                            <ul class="list-unstyled text-success">
+                                <li><i class="fas fa-plus-circle"></i> Registrar nuevas entregas</li>
+                                <li><i class="fas fa-undo"></i> Registrar devoluciones</li>
+                                <li><i class="fas fa-file-pdf"></i> Generar documentos PDF</li>
+                                <li><i class="fas fa-eye"></i> Ver historial de movimientos</li>
+                                <li><i class="fas fa-laptop"></i> Ver inventario de equipos</li>
+                                <li><i class="fas fa-address-book"></i> Acceder a contactos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="text-danger"><i class="fas fa-times"></i> No puedes hacer:</h5>
+                            <ul class="list-unstyled text-danger">
+                                <li><i class="fas fa-trash"></i> Eliminar equipos del inventario</li>
+                                <li><i class="fas fa-users-cog"></i> Gestionar usuarios</li>
+                                <li><i class="fas fa-cogs"></i> Modificar configuraciones del sistema</li>
+                                <li><i class="fas fa-user-plus"></i> Crear nuevos usuarios</li>
+                                <li><i class="fas fa-shield-alt"></i> Asignar roles y permisos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ESTADÍSTICAS RÁPIDAS --}}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info">
+                    <h3 class="card-title text-white">
+                        <i class="fas fa-chart-pie"></i> Vista Rápida del Sistema
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        <i class="fas fa-info-circle"></i> 
+                        Como Editor, tienes acceso completo a las funciones operativas del sistema EquipControl. 
+                        Puedes gestionar entregas, devoluciones y generar toda la documentación necesaria.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -87,30 +141,20 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
-
-    {{-- BOTÓN PARA CERRAR SESIÓN --}}
-    <a href="#" 
-       class="btn btn-danger mt-3"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-       <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-    </a>
 @stop
 
 @section('css')
     <style>
-        /* Fondo general */
         body {
             background-color: #467B79 !important;
         }
-
-        /* Título principal */
+        
         h1 {
             color: #ffffff;
             font-weight: bold;
             margin-bottom: 20px;
         }
-
-        /* Estilo general para las tarjetas */
+        
         .small-box {
             position: relative;
             padding: 15px;
@@ -120,8 +164,9 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             overflow: hidden;
+            cursor: pointer;
         }
-
+        
         .small-box .inner h3,
         .small-box .inner p,
         .small-box-footer {
@@ -130,7 +175,7 @@
             position: relative;
             font-size: 16px;
         }
-
+        
         .small-box .icon {
             position: absolute;
             top: 15px;
@@ -139,49 +184,77 @@
             color: rgba(255, 255, 255, 0.08);
             z-index: 1;
         }
-
+        
         .small-box:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
-
-        /* Texto blanco específico solo para Devoluciones Pendientes */
-        .box-devoluciones .inner h3,
-        .box-devoluciones .inner p,
-        .box-devoluciones .small-box-footer {
-            color: #ffffff !important;
-        }
-
-        /* (Opcional) Estilos para futuras tarjetas o tablas */
+        
         .card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            background-color: #467B79;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        table.table {
-            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-radius: 8px;
-            overflow: hidden;
+            border: none;
         }
-
-        table.table thead {
-            background-color: #3e6f6d;
-            color: white;
+        
+        .card-header {
+            background-color: #467B79 !important;
+            color: white !important;
+            border-radius: 8px 8px 0 0 !important;
         }
-
-        table.table tbody tr:hover {
-            background-color: #f2f2f2;
+        
+        .card-header h3 {
+            color: white !important;
+        }
+        
+        .bg-info {
+            background-color: #17a2b8 !important;
+        }
+        
+        .text-success {
+            color: #28a745 !important;
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        .list-unstyled li {
+            padding: 2px 0;
+            font-size: 14px;
         }
     </style>
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the laravel-AdminLTE package!");</script>
+    <script> 
+        console.log("Editor dashboard cargado correctamente - Laravel 9 compatible");
+        
+        // Verificar si jQuery está disponible
+        if (typeof jQuery !== 'undefined') {
+            $(document).ready(function() {
+                // Mensaje de bienvenida
+                @if(session('success'))
+                    // Usar SweetAlert si está disponible, sino alert nativo
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: '{{ session("success") }}',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert('{{ session("success") }}');
+                    }
+                @endif
+                
+                // Efecto hover en los cuadritos
+                $('.small-box').on('mouseenter', function() {
+                    $(this).addClass('shadow-lg');
+                }).on('mouseleave', function() {
+                    $(this).removeClass('shadow-lg');
+                });
+            });
+        }
+    </script>
 @stop
