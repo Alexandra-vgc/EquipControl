@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-6">
             <x-adminlte-card title="Información del Instituto" theme="primary" icon="fas fa-university">
-                <p><strong>Nombre:</strong> Instituto Superior Tecnológico Ejemplo</p>
+                <p><strong>Nombre:</strong> Instituto Superior Tecnológico</p>
                 <p><strong>Dirección:</strong> Av. Siempre Viva 123, Ciudad</p>
                 <p><strong>Teléfono:</strong> (02) 555-1234</p>
                 <p><strong>Email:</strong> contacto@instituto.edu.ec</p>
