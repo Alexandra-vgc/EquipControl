@@ -3,7 +3,7 @@
 @section('title', 'Contacto')
 
 @section('content_header')
-    <h1 class="text-bold text-dark">Formulario de Contacto</h1>
+    <h1 class="text-bold text-dark">Contacto</h1>
 @stop
 
 @section('content')

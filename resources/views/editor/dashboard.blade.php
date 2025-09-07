@@ -98,6 +98,7 @@
                                 <li><i class="fas fa-file-pdf"></i> Generar documentos PDF</li>
                                 <li><i class="fas fa-eye"></i> Ver historial de movimientos</li>
                                 <li><i class="fas fa-laptop"></i> Ver inventario de equipos</li>
+                                <li><i class="fas fa-edit"></i> Editar información de equipos</li>
                                 <li><i class="fas fa-address-book"></i> Acceder a contactos</li>
                             </ul>
                         </div>
