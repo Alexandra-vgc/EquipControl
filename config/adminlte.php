@@ -143,10 +143,17 @@ return [
         ['header' => 'OPERACIONES (EDITOR)', 'can' => ['editor']],
 
         [
-            'text'  => 'Ver Inventario',
-            'route' => 'equipos.inventario',
-            'icon'  => 'fas fa-boxes',
-            'can'   => ['editor'],
+            'text'    => 'Equipos',
+            'icon'    => 'fas fa-desktop',
+            'can'     => ['editor'],
+            'submenu' => [
+                [
+                    'text' => 'Ver Inventario',
+                    'route' => 'equipos.inventario',
+                    'icon' => 'fas fa-boxes',
+                    'can'  => ['editor'],
+                ],
+            ],
         ],
 
         [
@@ -198,10 +205,9 @@ return [
         
         [
             'text'   => 'Cerrar Sesión',
-            'url'    => 'logout',
+            'url'    => '#',
             'icon'   => 'fas fa-sign-out-alt',
-            'method' => 'post',
-            
+            'onclick' => 'event.preventDefault(); document.getElementById(\'logout-form\').submit();',
         ],
     ],
 

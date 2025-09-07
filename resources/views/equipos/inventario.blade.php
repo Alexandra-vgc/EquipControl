@@ -22,11 +22,11 @@
             <h3 class="card-title"><i class="fas fa-laptop"></i> Lista de Equipos</h3>
             <div class="card-tools">
                 {{-- Solo admin puede agregar equipos --}}
-                @can('admin')
+                @hasrole('admin')
                     <a href="{{ route('equipos.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Agregar Equipo
                     </a>
-                @endcan
+                @endhasrole
             </div>
         </div>
         
@@ -94,23 +94,23 @@
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     
-                                    {{-- Solo ADMIN puede editar --}}
-                                    @can('admin')
+                                    {{-- ADMIN y EDITOR pueden editar --}}
+                                    @hasanyrole('admin|editor')
                                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-warning btn-sm" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                    @endcan
+                                    @endhasanyrole
                                     
                                     {{-- Solo ADMIN puede eliminar --}}
-                                    @can('admin')
+                                    @hasrole('admin')
                                         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{ $equipo->id }}" title="Eliminar">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    @endcan
+                                    @endhasrole
                                 </div>
 
                                 {{-- Modal eliminar - solo para ADMIN --}}
-                                @can('admin')
+                                @hasrole('admin')
                                     <div class="modal fade" id="deleteModal{{ $equipo->id }}" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -138,7 +138,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endcan
+                                @endhasrole
 
                             </td>
                         </tr>
@@ -149,9 +149,9 @@
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <h5>No hay equipos registrados</h5>
                                     {{-- Solo admin puede agregar equipos desde aquí también --}}
-                                    @can('admin')
+                                    @hasrole('admin')
                                         <a href="{{ route('equipos.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Equipo</a>
-                                    @endcan
+                                    @endhasrole
                                 </div>
                             </td>
                         </tr>

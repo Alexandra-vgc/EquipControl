@@ -130,13 +130,13 @@ Route::prefix('equipos')->name('equipos.')->group(function () {
         ->middleware(['auth'])
         ->name('show');
     
-    // Editar - solo admin
+    // Editar - admin y editor pueden editar
     Route::get('/{equipo}/editar', [EquipoController::class, 'edit'])
-        ->middleware(['auth', 'role:admin'])
+        ->middleware(['auth', 'role:admin|editor'])
         ->name('edit');
     
     Route::put('/{equipo}', [EquipoController::class, 'update'])
-        ->middleware(['auth', 'role:admin'])
+        ->middleware(['auth', 'role:admin|editor'])
         ->name('update');
 
     // Eliminar - solo admin (mantengo tu middleware original)
