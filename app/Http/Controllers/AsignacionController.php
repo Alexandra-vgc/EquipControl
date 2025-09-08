@@ -15,10 +15,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class AsignacionController extends Controller
 {
     public function __construct()
-    {
-        // Verificar que el usuario tenga permiso para registrar entregas
-        $this->middleware(['auth', 'can:registrar-entregas']);
-    }
+{
+    $this->middleware(['auth', 'can:crear entregas']);
+}
 
     public function create()
     {

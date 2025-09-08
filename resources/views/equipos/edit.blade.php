@@ -124,7 +124,14 @@ function mostrarCampos() {
     } else if(tipo == 'Monitor') {
         document.querySelectorAll('.campo-monitor, .campo-monitor-cpu, .campo-todos').forEach(el => el.style.display = 'block');
     } else if(tipo == 'Teclado' || tipo == 'Mouse') {
-        document.querySelectorAll('.campo-todos').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.campo-todos').forEach(el => {
+            const label = el.querySelector('label');
+            const input = el.querySelector('input');
+            label.textContent = 'Marca';      // Cambia la etiqueta a Marca
+            input.name = 'marca_simple';             // Cambia el name a marca
+            input.value = '{{ $equipo->marca }}'; // Mantiene el valor actual de la marca
+            el.style.display = 'block';
+        });
     }
 }
 

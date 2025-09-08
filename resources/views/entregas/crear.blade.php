@@ -20,11 +20,26 @@
             </ol>
         </div>
     </div>
+    <!-- Buscador de PDFs -->
+<!-- Buscador de PDFs -->
+<div class="row justify-content-start">
+    <div class="col-md-4"> <!-- 👈 Ajusta el ancho aquí (col-md-3, col-md-4, etc.) -->
+        <div class="card shadow mb-3">
+            <div class="card-header bg-light py-2">
+                <strong>Buscar PDF</strong>
+            </div>
+            <div class="card-body p-2">
+                <input type="text" id="buscarPdf" class="form-control form-control-sm" placeholder="Ingrese nombre del PDF">
+                <div id="resultadosPdf" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('content')
-{{-- Formulario dinámico según el rol --}}
-<form action="{{ auth()->user()->hasRole('editor') ? route('editor.entregas.store') : route('entregas.store') }}" method="POST">
+<form action="{{ route('entregas.store') }}" method="POST">
     @csrf
 
     <!-- Datos generales -->
@@ -62,14 +77,20 @@
         </div>
     </div>
 
-    @php
-        $categorias = [
-            'CPU' => $cpus,
-            'Monitores' => $monitores,
-            'Teclados' => $teclados,
-            'Mouse' => $mouses
-        ];
-    @endphp
+   @php
+    $cpus = $cpus ?? [];
+    $monitores = $monitores ?? [];
+    $teclados = $teclados ?? [];
+    $mouses = $mouses ?? [];
+
+    $categorias = [
+        'CPU' => $cpus,
+        'Monitores' => $monitores,
+        'Teclados' => $teclados,
+        'Mouse' => $mouses
+    ];
+@endphp
+
 
     <!-- Equipos disponibles -->
     @foreach($categorias as $nombre => $items)
@@ -168,12 +189,51 @@
     body { font-size: 0.9rem; }
 </style>
 @stop
-
 @section('js')
 <script>
     $(function() {
+        // tooltips y select2 que ya tienes
         $('[data-toggle="tooltip"]').tooltip();
         $('.select2').select2({ width: '100%' });
+
+        // 🔎 Buscador de PDFs en tiempo real
+        $('#buscarPdf').on('keyup', function() {
+            let query = $(this).val();
+
+            if(query.length > 1) {
+                $.ajax({
+                    url: "{{ route('pdf.buscar') }}",
+                    type: 'GET',
+                    data: { nombre: query },
+                    success: function(data) {
+                        $('#resultadosPdf').empty();
+
+                        if(data.length > 0) {
+                            data.forEach(function(pdf) {
+                                $('#resultadosPdf').append(`
+                                    <div class="card mb-2 shadow-sm">
+                                        <div class="card-body p-2">
+                                            <p class="mb-1"><strong>${pdf.nombre}</strong></p>
+                                            <a href="/storage/${pdf.archivo}" target="_blank" class="btn btn-sm btn-success w-100">
+                                                <i class="fas fa-download"></i> Descargar
+                                            </a>
+                                        </div>
+                                    </div>
+                                `);
+                            });
+                        } else {
+                            $('#resultadosPdf').append(`
+                                <div class="alert alert-warning py-1 px-2">
+                                    No se encontraron PDFs.
+                                </div>
+                            `);
+                        }
+                    }
+                });
+            } else {
+                $('#resultadosPdf').empty(); // limpia si está vacío
+            }
+        });
     });
 </script>
 @stop

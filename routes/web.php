@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Editor\DevolucionController as EditorDevolucionController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes - VERSIÓN FINAL COMPLETA
@@ -150,9 +151,11 @@ Route::prefix('equipos')->name('equipos.')->group(function () {
 // ===========================
 
 // Admin puede crear entregas
-Route::middleware(['auth','role:admin'])->group(function () {
+// Admin puede crear entregas (con permiso)
+Route::middleware(['auth','role:admin','permission:crear'])->group(function () {
     Route::get('/entregas/crear', [AsignacionController::class, 'create'])->name('entregas.create');
     Route::post('/entregas', [AsignacionController::class, 'store'])->name('entregas.store');
+
     Route::get('/entregas/{id}/pdf', [AsignacionController::class, 'pdf'])->name('entregas.pdf');
 });
 
@@ -168,6 +171,7 @@ Route::middleware(['auth','role:editor'])->prefix('editor')->name('editor.')->gr
     })->name('documentos.index');
 });
 
+Route::get('/pdfs/buscar', [PDFController::class, 'buscar'])->name('pdf.buscar');
 // ===========================
 // RUTAS DE DEVOLUCIONES DEL EDITOR
 // ===========================

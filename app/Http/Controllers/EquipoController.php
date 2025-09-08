@@ -142,7 +142,7 @@ class EquipoController extends Controller
 
             case 'Teclado':
             case 'Mouse':
-                $data['serial'] = $request->serial_simple;
+                $data['marca'] = $request->marca_simple;
                 break;
         }
 
