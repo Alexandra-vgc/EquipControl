@@ -165,6 +165,12 @@
             </x-adminlte-card>
         </div>
     </div>
+
+    {{-- FORMULARIO OCULTO PARA LOGOUT --}}
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+    
 @stop
 
 @section('css')
@@ -230,6 +236,71 @@
                 }]
             },
             options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // FUNCIÓN DE LOGOUT MEJORADA - CORREGIDA
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para hacer logout
+            function doLogout(e) {
+                if (e) e.preventDefault();
+                
+                const form = document.getElementById('logout-form');
+                if (form) {
+                    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                        form.submit();
+                    }
+                } else {
+                    console.error('No se encontró el formulario de logout');
+                }
+            }
+            
+            // Buscar enlaces del sidebar específicamente
+            setTimeout(function() {
+                // Buscar todos los posibles selectores de logout
+                const selectors = [
+                    '.sidebar a[onclick*="logout-form"]',
+                    '.sidebar a[href*="logout"]',
+                    'a[id="logout-link"]',
+                    '.sidebar a:contains("Cerrar Sesión")'
+                ];
+                
+                // Buscar manualmente por texto
+                const allSidebarLinks = document.querySelectorAll('.sidebar a, .main-sidebar a, [data-widget="pushmenu"] ~ * a');
+                
+                allSidebarLinks.forEach(function(link) {
+                    const text = link.textContent.trim().toLowerCase();
+                    
+                    if (text.includes('cerrar sesión') || 
+                        text.includes('logout') || 
+                        text.includes('salir') ||
+                        link.getAttribute('onclick') && link.getAttribute('onclick').includes('logout-form')) {
+                        
+                        // Limpiar eventos anteriores
+                        link.removeAttribute('onclick');
+                        link.href = '#';
+                        
+                        // Clonar el elemento para remover todos los event listeners
+                        const newLink = link.cloneNode(true);
+                        link.parentNode.replaceChild(newLink, link);
+                        
+                        // Agregar el nuevo evento
+                        newLink.addEventListener('click', doLogout);
+                        
+                        console.log('Logout event attached to:', newLink.textContent.trim());
+                    }
+                });
+            }, 1000); // Esperar 1 segundo para que se cargue el sidebar
+            
+            // También buscar en el menú principal por si acaso
+            const mainMenuLinks = document.querySelectorAll('.navbar a, .nav a');
+            mainMenuLinks.forEach(function(link) {
+                const text = link.textContent.trim().toLowerCase();
+                if (text.includes('cerrar sesión') || text.includes('logout') || text.includes('salir')) {
+                    link.removeAttribute('onclick');
+                    link.href = '#';
+                    link.addEventListener('click', doLogout);
+                }
+            });
         });
     </script>
 @stop
