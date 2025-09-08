@@ -80,24 +80,24 @@ return [
         // ===========================
         // MENÚ PARA ADMINISTRADORES
         // ===========================
-        ['header' => 'GESTIÓN DE EQUIPOS', 'can' => ['admin']],
+        ['header' => 'GESTIÓN DE EQUIPOS', 'can' => 'admin'],
 
         [
             'text'    => 'Equipos',
             'icon'    => 'fas fa-desktop',
-            'can'     => ['admin'],
+            'can'     => 'admin',
             'submenu' => [
                 [
                     'text' => 'Ver Inventario',
                     'route' => 'equipos.inventario',
                     'icon' => 'fas fa-boxes',
-                    'can'  => ['admin'],
+                    'can'  => 'admin',
                 ],
                 [
                     'text' => 'Crear Nuevo Equipo',
                     'route' => 'equipos.create',
                     'icon' => 'fas fa-plus-circle',
-                    'can'  => ['admin'],
+                    'can'  => 'admin',
                 ],
             ],
         ],
@@ -106,33 +106,33 @@ return [
             'text'  => 'Nueva Entrega',
             'route' => 'entregas.create',
             'icon'  => 'fas fa-file-signature',
-            'can'   => ['admin'],
+            'can'   => 'admin',
         ],
 
         [
             'text'  => 'Devoluciones',
             'route' => 'admin.devoluciones.create',
             'icon'  => 'fas fa-undo',
-            'can'   => ['admin'],
+            'can'   => 'admin',
         ],
 
         [
             'text'  => 'Historial',
             'route' => 'historial.index',
             'icon'  => 'fas fa-history',
-            'can'   => ['admin'],
+            'can'   => 'admin',
         ],
 
         [
             'text' => 'Usuarios',
             'icon' => 'fas fa-users',
-            'can'  => ['admin'],
+            'can'  => 'admin',
             'submenu' => [
                 [
                     'text'  => 'Asignar Roles',
                     'route' => 'admin.usuario.asignar',
                     'icon'  => 'fas fa-user-tag',
-                    'can'   => ['admin'],
+                    'can'   => 'admin',
                 ],
             ],
         ],
@@ -140,18 +140,18 @@ return [
         // ===========================
         // MENÚ PARA EDITORES
         // ===========================
-        ['header' => 'OPERACIONES (EDITOR)', 'can' => ['editor']],
+        ['header' => 'OPERACIONES (EDITOR)', 'can' => 'editor'],
 
         [
             'text'    => 'Equipos',
             'icon'    => 'fas fa-desktop',
-            'can'     => ['editor'],
+            'can'     => 'editor',
             'submenu' => [
                 [
                     'text' => 'Ver Inventario',
                     'route' => 'equipos.inventario',
                     'icon' => 'fas fa-boxes',
-                    'can'  => ['editor'],
+                    'can'  => 'editor',
                 ],
             ],
         ],
@@ -160,28 +160,28 @@ return [
             'text'  => 'Nueva Entrega',
             'route' => 'editor.entregas.create',
             'icon'  => 'fas fa-file-signature',
-            'can'   => ['editor'],
+            'can'   => 'editor',
         ],
 
         [
             'text'  => 'Devoluciones',
             'route' => 'editor.devoluciones.create',
             'icon'  => 'fas fa-undo',
-            'can'   => ['editor'],
+            'can'   => 'editor',
         ],
 
         [
             'text'  => 'Generar Documentos',
             'route' => 'editor.documentos.index',
             'icon'  => 'fas fa-file-pdf',
-            'can'   => ['editor'],
+            'can'   => 'editor',
         ],
 
         [
             'text'  => 'Historial',
             'route' => 'historial.index',
             'icon'  => 'fas fa-history',
-            'can'   => ['editor'],
+            'can'   => 'editor',
         ],
 
         // ===========================
@@ -207,7 +207,8 @@ return [
             'text'   => 'Cerrar Sesión',
             'url'    => '#',
             'icon'   => 'fas fa-sign-out-alt',
-            'onclick' => 'event.preventDefault(); document.getElementById(\'logout-form\').submit();',
+            'id'     => 'logout-link',
+
         ],
     ],
 
