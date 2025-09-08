@@ -9,7 +9,7 @@
 @stop
 
 @section('content')
-<form action="{{ route('asignaciones.guardarDetalles') }}" method="POST" enctype="multipart/form-data">
+<form id="formDetalles" action="{{ route('asignaciones.guardarDetalles') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="asignacion_id" value="{{ $asignacion->id }}">
 
@@ -219,7 +219,7 @@
         </div>
     </div>
 
-    <!-- Adjuntar imágenes al final -->
+    <!-- Adjuntar imágenes -->
     <div class="card shadow mb-3" style="max-width: 400px;">
         <div class="card-header bg-light">
             <strong>Adjuntar Imágenes</strong>
@@ -230,16 +230,93 @@
         </div>
     </div>
 
-    <!-- Botones fuera del card -->
+   
+    <!-- Botones -->
     <div class="d-flex justify-content-between mt-3">
         <a href="{{ route('entregas.create') }}" class="btn btn-secondary btn-lg shadow">
             <i class="fas fa-arrow-left"></i> Atrás
         </a>
 
-        <button type="submit" class="btn btn-success btn-lg shadow">
+        <button type="button" id="btnFinalizar" class="btn btn-success btn-lg shadow">
             <i class="fas fa-check"></i> Finalizar
         </button>
     </div>
-
 </form>
+
+<!-- Modal para mostrar el PDF -->
+<div id="modalPdf" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-4 rounded-lg w-3/4 h-3/4 shadow-lg">
+        <h4 class="text-lg font-bold mb-2 text-black">Vista previa del PDF</h4>
+        <iframe id="iframePdf" class="w-full h-5/6 border"></iframe>
+        <div class="flex justify-end mt-2">
+            <button id="btnGuardarPdf" class="bg-green-600 text-black px-4 py-2 rounded shadow">
+                <i class="fas fa-save"></i> Guardar
+            </button>
+            <button onclick="cerrarModal()" class="ml-2 bg-red-500 text-black px-4 py-2 rounded shadow">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+@stop
+
+@section('js')
+<script>
+function cerrarModal() {
+    document.getElementById('modalPdf').classList.add('hidden');
+}
+
+document.getElementById('btnFinalizar').addEventListener('click', function () {
+    let asignacionId = "{{ $asignacion->id }}";
+
+    // Llamada AJAX para generar PDF en base64
+    fetch(`/asignaciones/pdf-base64/${asignacionId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.pdfBase64) {
+                alert("❌ No se generó el PDF. Verifica la vista PDF y los datos.");
+                return;
+            }
+
+            // Mostrar PDF en modal
+            let iframe = document.getElementById('iframePdf');
+            iframe.src = "data:application/pdf;base64," + data.pdfBase64;
+            document.getElementById('modalPdf').classList.remove('hidden');
+
+            // Botón Guardar
+            document.getElementById('btnGuardarPdf').onclick = function() {
+                fetch('{{ route("pdfs.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        asignacion_id: asignacionId,
+                        pdf_base64: data.pdfBase64,
+                        filename: "Entrega_" + asignacionId + "_" + Date.now() + ".pdf"
+                    })
+                })
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        alert("✅ PDF guardado correctamente");
+                        cerrarModal();
+                        window.location.href = "{{ route('entregas.create') }}";
+                    } else {
+                        alert("❌ Error al guardar PDF");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("❌ Error al guardar PDF");
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("❌ Error al generar el PDF. Revisa la consola para más detalles.");
+        });
+});
+</script>
 @stop

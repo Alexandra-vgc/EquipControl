@@ -9,6 +9,14 @@ class Pdf extends Model
 {
     use HasFactory;
 
-    protected $table = 'pdfs'; // tu tabla existente
-    protected $fillable = ['nombre', 'archivo']; // campos que vas a llenar
+    protected $fillable = [
+        'asignacion_id',
+        'nombre',
+        'archivo',
+    ];
+
+    public function asignacion()
+    {
+        return $this->belongsTo(Asignacion::class);
+    }
 }

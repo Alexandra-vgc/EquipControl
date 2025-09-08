@@ -12,6 +12,7 @@ use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Editor\DevolucionController as EditorDevolucionController;
+use App\Http\Controllers\PdfController;
 
 
 /*
@@ -202,4 +203,24 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/asignaciones/vista2/{asignacion}', [AsignacionController::class, 'vista2'])->name('asignaciones.vista2');
     Route::post('/asignaciones/vista2', [AsignacionController::class, 'guardarDetalles'])->name('asignaciones.guardarDetalles');
+});
+Route::middleware(['auth'])->group(function () {
+
+    // Vista previa en base64
+    Route::get('/asignaciones/pdf-base64/{id}', [AsignacionController::class, 'generarPdfBase64'])
+        ->name('asignaciones.pdfBase64');
+
+    // Guardar PDF desde formulario tradicional o base64
+    Route::post('/pdfs/store', [PdfController::class, 'store'])
+        ->name('pdfs.store');
+
+    // Guardar PDF automáticamente desde servidor (botón "Guardar PDF" en vista2)
+    Route::post('/pdfs/guardar', [PdfController::class, 'generarPdf'])
+        ->name('pdf.guardar');
+
+    // Generar PDF manualmente en navegador si quieres (opcional)
+    Route::get('/pdf/generar/{id}', [PdfController::class, 'generarPdf'])
+        ->name('pdf.generar');
+
+    Route::get('/pdfs/buscar', [PdfController::class, 'buscar'])->name('pdf.buscar');
 });

@@ -57,15 +57,15 @@
   <tbody>
   {{-- COMPUTADOR --}}
 <tr>
-  <td colspan="4" class="titulo-tabla" style="text-align: left; border: 1px solid #333;">
+  <td colspan="5" style="border: 1px solid #333; font-weight:bold;">
     COMPUTADOR
   </td>
 </tr>
 <tr>
   <th style="width: 20%; border: 1px solid #333;">TIPO</th>
   <th style="width: 20%; border: 1px solid #333;">MARCA</th>
-  <th style="width: 30%; border: 1px solid #333;">MODELO</th>
-  <th style="width: 30%; border: 1px solid #333;">SERIAL</th>
+  <th style="width: 20%; border: 1px solid #333;">MODELO</th>
+  <th style="width: 20%; border: 1px solid #333;" colspan="2">SERIAL</th>
 </tr>
 <tr>
   <td style="border: 1px solid #333;">
@@ -77,11 +77,10 @@
   <td style="border: 1px solid #333;">
     {{ optional($asignacion->detalles->first()->equipo)->modelo ?? '—' }}
   </td>
-  <td style="border-top: 1px solid #333; border-bottom: 1px solid #333; border-right: 1px solid #333; border-left: 1px solid #333;">
+  <td style="border: 1px solid #333;" colspan="2">
     {{ optional($asignacion->detalles->first()->equipo)->serial ?? '—' }}
   </td>
 </tr>
-
     {{-- MAINBOARD --}}
 <tr>
   <th rowspan="2" style="width: 10%; background:#f0f0f0; border: 1px solid #333; text-align:center; vertical-align: middle;">
@@ -112,10 +111,10 @@
       <td style="border: 1px solid #333;">{{ $asignacion->detalles->first()->equipo->memoria_ram ?? '—' }}</td>
       <td style="border: 1px solid #333;">{{ $asignacion->detalles->first()->equipo->capacidad_disco ?? '—' }}</td>
       <td style="text-align:center; border: 1px solid #333;">
-        {{ $asignacion->detalles->first()->equipo->teclado ?? '—' }}
+        {{ $asignacion->detalles->first()->equipo->teclados?? '—' }}
       </td>
       <td style="text-align:center; border: 1px solid #333;">
-        {{ $asignacion->detalles->first()->equipo->mouse ?? '—' }}
+        {{ $asignacion->detalles->first()->equipo->mouse?? '—' }}
       </td>
     </tr>
 

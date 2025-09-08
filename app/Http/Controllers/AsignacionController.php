@@ -15,9 +15,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class AsignacionController extends Controller
 {
     public function __construct()
-{
-    $this->middleware(['auth', 'can:crear entregas']);
-}
+    {
+        $this->middleware(['auth', 'can:crear entregas']);
+    }
 
     public function create()
     {
@@ -145,11 +145,32 @@ class AsignacionController extends Controller
     }
 
     public function pdf($id)
-    {
+{
+    try {
         $asignacion = Asignacion::with(['usuario', 'detalles.equipo', 'otrosDispositivos'])->findOrFail($id);
-
         $pdf = Pdf::loadView('entregas.pdf', compact('asignacion'))->setPaper('A4');
-
         return $pdf->download("Entrega_{$asignacion->id}.pdf");
+    } catch (\Exception $e) {
+        dd($e->getMessage(), $e->getTraceAsString());
     }
+}
+
+    /**
+ * NUEVO MÉTODO: Generar PDF en base64 para mostrar en el modal de vista2
+ */
+public function generarPdfBase64($id)
+{
+    $asignacion = Asignacion::with(['usuario', 'detalles.equipo', 'otrosDispositivos'])
+        ->findOrFail($id);
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('entregas.pdf', compact('asignacion'))->setPaper('A4');
+
+    $pdfBase64 = base64_encode($pdf->output());
+
+    return response()->json([
+        'pdfBase64' => $pdfBase64,
+        'filename' => "Entrega_{$asignacion->id}.pdf"
+    ]);
+}
+
 }
